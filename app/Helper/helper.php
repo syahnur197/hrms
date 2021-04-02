@@ -39,7 +39,6 @@ function convertRole($role)
         'Senior Software Developer' => '14',
         'Accounts Executive' => '15',
         'Manager' => '16'
-        //bharo baki
     ];
     if ($role) {
         return $data[$role];
@@ -84,13 +83,6 @@ function covertDateToDay($date)
     $day = date("l", $day);
     return strtoupper($day);
 }
-/*
-function getFormattedDate($date)
-{
-    $date = new DateTime($date);
-    return date_format($date, 'l jS \\of F Y');
-}*/
-
 
 function getFormattedDate($date)
 {
@@ -101,7 +93,6 @@ function getFormattedDate($date)
 function getEmployeeDropDown()
 {
     $data = [
-
         "" => "Select",
         'name' => 'Name',
         'code' => 'Code',
@@ -130,7 +121,6 @@ function getLeaveColumns()
 function getAttendanceDropDown()
 {
     $data = [
-
         "" => "Select",
         'name' => 'Name',
         'code' => 'Code',
@@ -145,7 +135,6 @@ function getAttendanceDropDown()
 
 function getHoursWorked($inTime, $outTime)
 {
-
     $result = strtotime($outTime) - strtotime($inTime);
     $totalMinutes = abs($result) / 60;
 
@@ -217,7 +206,6 @@ function formatDate($date)
     $difference = date_diff($created_at, $today);
 
     if ($difference->days > 1) {
-        //{{$job->created_at ? $job->created_at->format('l jS \\of F Y') : ''}}
         return $date->format('l jS \\of F Y H:m:s');
     }
 
