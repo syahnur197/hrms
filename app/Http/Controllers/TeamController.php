@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Team;
 use App\Models\Role;
-use App\User;
+use App\Models\User;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -84,7 +85,7 @@ class TeamController extends Controller
 
         $edit = Team::where('team_id', $id)->first();
 
-        if($edit) {
+        if ($edit) {
             $oldMembers = Team::where('team_id', $team_id)->get(['member_id']);
             /*$oldLeader = Team::where('team_id', $team_id)->get('leader_id');
             if($oldLeader->leader_id == $leader_id)
@@ -112,34 +113,28 @@ class TeamController extends Controller
                     $team->save();
                 }
                 \Session::flash('flash_message', 'Team member successfully added!');
-            } elseif($oldSize > $newSize) {
+            } elseif ($oldSize > $newSize) {
                 //delete the remainder
                 $idsToDelete = array_diff($oldmembers, $members);
                 \DB::table('teams')->where('team_id', $team_id)->whereIn('member_id', $idsToDelete)->delete();
                 \Session::flash('flash_message', 'Team member successfully deleted !');
-            }else
-            {
+            } else {
                 $team = Team::where('team_id', $team_id)->first();
                 $team->name = $name;
                 $team->team_id = $team_id;
                 $team->leader_id = $leader_id;
                 $team->save();
             }
-
-
-        }
-        else
-        {
+        } else {
             \Session::flash('flash_message', 'Team not found!');
         }
 
         return redirect('team-listing');
-
     }
 
     public function doDelete($id)
     {
-        $team = Team::where('member_id',$id);
+        $team = Team::where('member_id', $id);
         $team->delete();
 
         \Session::flash('flash_message', 'Team member successfully removed!');
@@ -150,9 +145,5 @@ class TeamController extends Controller
     {
         $team_id = Team::max('team_id');
         $team_id = $team_id + 1;
-
-
     }
-
-
 }

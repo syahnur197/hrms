@@ -3,12 +3,12 @@
 function totalLeaves($leaveType)
 {
     $result = [
-        '1' => '24',//casual leave
-        '2' => '6',//sick leave
-        '3' => '15',//marriage leave
-        '4' => '10',//bereavement leave
-        '6' => '15',//paternity leave
-        '12' => '90',//maternity leave
+        '1' => '24', //casual leave
+        '2' => '6', //sick leave
+        '3' => '15', //marriage leave
+        '4' => '10', //bereavement leave
+        '6' => '15', //paternity leave
+        '12' => '90', //maternity leave
         '7' => '0',
         '8' => '0',
         '9' => '0',
@@ -41,7 +41,7 @@ function convertRole($role)
         'Manager' => '16'
         //bharo baki
     ];
-    if($role){
+    if ($role) {
         return $data[$role];
     }
     return $data;
@@ -60,7 +60,10 @@ function convertStatus($emp_status)
 
 function convertStatusBack($emp_status)
 {
-    if($emp_status){}else{$emp_status=1;}
+    if ($emp_status) {
+    } else {
+        $emp_status = 1;
+    }
 
     $data = [
         '1' => 'Present',
@@ -151,7 +154,6 @@ function getHoursWorked($inTime, $outTime)
     $hours = $hours / 60;
 
     return $hours . ':00' . $minutes . ':00';
-
 }
 
 function convertAttendanceTo($status)
@@ -195,36 +197,36 @@ function qualification()
         'Other' => 'Other'
     ];
 
-        return $data;
+    return $data;
+}
+
+function getGender($gender)
+{
+    $data = [
+        '0' => 'Male',
+        '1' => 'Female',
+    ];
+
+    return $data[$gender];
+}
+
+function formatDate($date)
+{
+    $created_at = $date;
+    $today      = \Carbon\Carbon::now();
+    $difference = date_diff($created_at, $today);
+
+    if ($difference->days > 1) {
+        //{{$job->created_at ? $job->created_at->format('l jS \\of F Y') : ''}}
+        return $date->format('l jS \\of F Y H:m:s');
     }
 
-    function getGender($gender)
-    {
-        $data = [
-            '0' => 'Male',
-            '1' => 'Female',
-        ];
+    return $date->diffForHumans();
+}
 
-        return $data[$gender];
-    }
+function getUserData($userId)
+{
+    $user = \App\Models\User::where('id', $userId)->with('employee')->first();
 
-    function formatDate($date)
-    {
-        $created_at = $date;
-        $today      = \Carbon\Carbon::now();
-        $difference = date_diff($created_at, $today);
-
-        if ($difference->days > 1) {
-            //{{$job->created_at ? $job->created_at->format('l jS \\of F Y') : ''}}
-            return $date->format('l jS \\of F Y H:m:s');
-        }
-
-        return $date->diffForHumans();
-    }
-
-    function getUserData($userId)
-    {
-        $user = \App\User::where('id', $userId)->with('employee')->first();
-
-        return $user;
-    }
+    return $user;
+}

@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Models;
-use App\User;
+
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class AssignProject extends Model
@@ -18,6 +19,6 @@ class AssignProject extends Model
 
     public function project()
     {
-        return $this->hasOne('\App\Models\Project', 'id', 'project_id');
+        return $this->hasOne(Project::class, 'id', 'project_id');
     }
 }

@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class LeaveApply extends Model
 {
-    public function leavetypeapply()
+    public function leaveTypeApply()
     {
-        return $this->hasOne('App\Models\LeaveTypeApply', 'leave_apply_id', 'id');
+        return $this->hasOne(LeaveTypeApply::class, 'leave_apply_id', 'id');
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Asset;
 use App\Models\AssignAsset;
 use App\Models\Employee;
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -25,7 +25,7 @@ class AssetController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    Public function processAsset(Request $request)
+    public function processAsset(Request $request)
     {
 
         $asset = new Asset;
@@ -34,7 +34,6 @@ class AssetController extends Controller
         $asset->save();
         \Session::flash('flash_message', 'Asset successfully added!');
         return redirect()->back();
-
     }
 
     /**
@@ -123,7 +122,7 @@ class AssetController extends Controller
      */
     public function showAssignment()
     {
-        $assets = AssignAsset::with(['employee','authority', 'asset'])->paginate(5);
+        $assets = AssignAsset::with(['employee', 'authority', 'asset'])->paginate(5);
         return view('hrms.asset.show_assignment', compact('assets'));
     }
 
@@ -175,5 +174,4 @@ class AssetController extends Controller
         \Session::flash('flash_message', 'Asset Assignment successfully Deleted!');
         return redirect('assignment-listing');
     }
-
 }

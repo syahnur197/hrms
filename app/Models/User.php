@@ -1,6 +1,7 @@
 <?php
 
-namespace App;
+namespace App\Models;
+
 use App\Models\Employee;
 use App\Models\Project;
 use App\Models\UserRole;
@@ -39,15 +40,14 @@ class User extends Authenticatable
 
     public function role()
     {
-        return $this->hasOne('App\Models\UserRole', 'user_id', 'id');
+        return $this->hasOne(UserRole::class, 'user_id', 'id');
     }
 
     public function isHR()
     {
         $userId = Auth::user()->id;
         $userRole = UserRole::where('user_id', $userId)->first();
-        if($userRole->role_id == 7 || $userRole->role_id == 1)
-        {
+        if ($userRole->role_id == 7 || $userRole->role_id == 1) {
             return true;
         }
         return false;
@@ -57,8 +57,7 @@ class User extends Authenticatable
     {
         $userId = Auth::user()->id;
         $userRole = UserRole::where('user_id', $userId)->first();
-        if($userRole->role_id != 3)
-        {
+        if ($userRole->role_id != 3) {
             return true;
         }
         return false;
@@ -68,9 +67,8 @@ class User extends Authenticatable
     {
         $userId = Auth::user()->id;
         $userRole = UserRole::where('user_id', $userId)->first();
-        $roleIds = [2,5,7,8,9,10,14,16];
-        if(in_array($userRole->role_id, $roleIds) )
-        {
+        $roleIds = [2, 5, 7, 8, 9, 10, 14, 16];
+        if (in_array($userRole->role_id, $roleIds)) {
             return true;
         }
         return false;
@@ -80,8 +78,7 @@ class User extends Authenticatable
     {
         $userId = Auth::user()->id;
         $userRole = UserRole::where('user_id', $userId)->first();
-        if($userRole->role_id == 16)
-        {
+        if ($userRole->role_id == 16) {
             return true;
         }
         return false;

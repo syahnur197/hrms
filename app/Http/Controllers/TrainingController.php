@@ -2,42 +2,45 @@
 
 namespace App\Http\Controllers;
 
-use App\TrainingInvite;
-use App\TrainingProgram;
-use App\User;
+use App\Models\TrainingInvite;
+use App\Models\TrainingProgram;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
 class TrainingController extends Controller
 {
-    public function addTrainingProgram(){
+    public function addTrainingProgram()
+    {
         return view('hrms.training.add_program');
     }
 
-    public function processTrainingProgram(Request $request){
-       $programs = new TrainingProgram();
-       $programs->name = $request->name;
-       $programs->description = $request->description;
-       $programs->save();
+    public function processTrainingProgram(Request $request)
+    {
+        $programs = new TrainingProgram();
+        $programs->name = $request->name;
+        $programs->description = $request->description;
+        $programs->save();
 
         \Session::flash('flash_message', 'Training Program successfully added!');
         return redirect()->back();
-
     }
 
-    public function showTrainingProgram(){
+    public function showTrainingProgram()
+    {
         $programs = TrainingProgram::paginate(10);
-        return view('hrms.training.show_program',compact('programs'));
+        return view('hrms.training.show_program', compact('programs'));
     }
 
-    public function doEditTrainingProgram($id){
+    public function doEditTrainingProgram($id)
+    {
         $programs = TrainingProgram::whereid($id)->first();
         return view('hrms.training.edit_program', compact('programs'));
-
     }
 
-    public function processEditTrainingProgram($id,Request $request){
+    public function processEditTrainingProgram($id, Request $request)
+    {
         $name = $request->name;
         $description = $request->description;
 
@@ -52,9 +55,9 @@ class TrainingController extends Controller
 
         \Session::flash('flash_message', 'Training Program successfully updated!');
         return redirect('show-training-program');
-
     }
-    public function deleteTrainingProgram($id){
+    public function deleteTrainingProgram($id)
+    {
         $program = TrainingProgram::find($id);
         $program->delete();
 
@@ -62,11 +65,12 @@ class TrainingController extends Controller
         return redirect('show-training-program');
     }
 
-    public function addTrainingInvite(){
+    public function addTrainingInvite()
+    {
 
-        $emps=User::get();
-        $programs= TrainingProgram::get();
-        return view('hrms.training.add_training_invite',compact('emps','programs'));
+        $emps = User::get();
+        $programs = TrainingProgram::get();
+        return view('hrms.training.add_training_invite', compact('emps', 'programs'));
     }
 
     public function processTrainingInvite(Request $request)
@@ -74,13 +78,10 @@ class TrainingController extends Controller
 
         $totalMembers = count($request->member_ids);
         $i = 0;
-        try
-        {
-            foreach ($request->member_ids as $member_id)
-            {
+        try {
+            foreach ($request->member_ids as $member_id) {
                 $check = TrainingInvite::where(['program_id' => $request->program_id, 'user_id' => $member_id])->first();
-                if(!$check)
-                {
+                if (!$check) {
                     $invites = new TrainingInvite();
                     $invites->user_id = $member_id;
                     $invites->program_id = $request->program_id;
@@ -91,28 +92,25 @@ class TrainingController extends Controller
                     $i++;
                 }
             }
-        }
-        catch(\Exception $e)
-        {
-            \Log::info($e->getMessage(). ' on '. $e->getLine(). ' in '. $e->getFile());
+        } catch (\Exception $e) {
+            \Log::info($e->getMessage() . ' on ' . $e->getLine() . ' in ' . $e->getFile());
         }
 
-        \Session::flash('flash_message', $i . ' out of '. $totalMembers. ' members have been invited for the training!');
+        \Session::flash('flash_message', $i . ' out of ' . $totalMembers . ' members have been invited for the training!');
         return redirect()->back();
     }
 
     public function showTrainingInvite()
     {
-        $invites = TrainingInvite::with(['employee','program'])->paginate(15);
-        return view('hrms.training.show_training_invite',compact('invites'));
+        $invites = TrainingInvite::with(['employee', 'program'])->paginate(15);
+        return view('hrms.training.show_training_invite', compact('invites'));
     }
 
     public function doEditTrainingInvite($id)
     {
         $training = TrainingInvite::with(['employee', 'program'])->findOrFail($id);
         $programs = TrainingProgram::get();
-        foreach($programs as $program)
-        {
+        foreach ($programs as $program) {
             $prog[$program->id] = $program->name;
         }
         $training->programs = $prog;
@@ -132,12 +130,12 @@ class TrainingController extends Controller
         return redirect('show-training-invite');
     }
 
-    public function deleteTrainingInvite($id){
-            $invite = TrainingInvite::where('id',$id);
-            $invite->delete();
+    public function deleteTrainingInvite($id)
+    {
+        $invite = TrainingInvite::where('id', $id);
+        $invite->delete();
 
-            \Session::flash('flash_message', 'Member successfully removed!');
-            return redirect('show-training-invite');
+        \Session::flash('flash_message', 'Member successfully removed!');
+        return redirect('show-training-invite');
     }
-
 }

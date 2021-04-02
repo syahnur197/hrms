@@ -6,7 +6,7 @@ use App\Models\Client;
 use App\Models\Employee;
 use App\Models\Project;
 use Illuminate\Http\Request;
-use App\User;
+use App\Models\User;
 use App\Models\AssignProject;
 
 use App\Http\Requests;
@@ -33,26 +33,26 @@ class ProjectController extends Controller
     }
 
 
-//    public function assignProject()
-//    {
-//        $model = new \stdClass();
-//        $model->projects = Project::get();
-//        $model->employees = Employee::whereHas('userrole', function($q)
-//        {
-//            $q->whereIn('role_id', ['3', '4']);
-//        })
-//            ->get();
-//
-//        return view('hrms.projects.assign', compact('model'));
-//
-//    }
+    //    public function assignProject()
+    //    {
+    //        $model = new \stdClass();
+    //        $model->projects = Project::get();
+    //        $model->employees = Employee::whereHas('userrole', function($q)
+    //        {
+    //            $q->whereIn('role_id', ['3', '4']);
+    //        })
+    //            ->get();
+    //
+    //        return view('hrms.projects.assign', compact('model'));
+    //
+    //    }
 
     public function validateCode($code)
     {
 
         $client = Client::where('code', $code)->first();
         if ($client) {
-             json_encode(['status' => false]);
+            json_encode(['status' => false]);
         }
         // json_encode(['status' => true]);
     }
@@ -62,8 +62,8 @@ class ProjectController extends Controller
         $project = new Project;
         $project->name = $request->project_name;
         $project->description = $request->description;
-      //  $project->fill(array_except($request->all(),'_token'));
-        $project->code= $request->code;
+        //  $project->fill(array_except($request->all(),'_token'));
+        $project->code = $request->code;
         $project->client_id = $request->client_id;
         $project->save();
         \Session::flash('flash_message', 'Project successfully added!');
@@ -81,14 +81,13 @@ class ProjectController extends Controller
     {
         $model = new \stdClass();
         $project = Project::with('client')->where(['id' => $projectId])->first();
-     //  return $model->project;
-       // $model->description =
+        //  return $model->project;
+        // $model->description =
         $clients = Client::get();
-        foreach($clients as $client)
-        {
+        foreach ($clients as $client) {
             $model->clients[$client->id] = $client->name;
         }
-        return view('hrms.projects.edit', compact('project','model'));
+        return view('hrms.projects.edit', compact('project', 'model'));
     }
 
 
@@ -152,7 +151,7 @@ class ProjectController extends Controller
      */
     public function showProjectAssignment()
     {
-        $projects = AssignProject::with(['employee','authority', 'project'])->paginate(5);
+        $projects = AssignProject::with(['employee', 'authority', 'project'])->paginate(5);
         return view('hrms.project.show-project-assignment', compact('projects'));
     }
 

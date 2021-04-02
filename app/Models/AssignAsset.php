@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class AssignAsset extends Model
@@ -19,6 +19,6 @@ class AssignAsset extends Model
 
     public function asset()
     {
-        return $this->hasOne('\App\Models\Asset', 'id', 'asset_id');
+        return $this->hasOne(Asset::class, 'id', 'asset_id');
     }
 }

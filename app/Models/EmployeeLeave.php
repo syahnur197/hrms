@@ -1,15 +1,14 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
-use App\Models\Employee;
 use Illuminate\Database\Eloquent\Model;
 
-class EmployeeLeaves extends Model
+class EmployeeLeave extends Model
 {
     public function leaveType()
     {
-        return $this->hasOne('App\Models\LeaveType', 'id', 'leave_type_id');
+        return $this->hasOne(LeaveType::class, 'id', 'leave_type_id');
     }
 
     public function user()

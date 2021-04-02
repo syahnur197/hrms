@@ -7,8 +7,8 @@ use App\Models\Employee;
 use App\Models\EmployeeUpload;
 use App\Models\Role;
 use App\Models\UserRole;
-use App\Promotion;
-use App\User;
+use App\Models\Promotion;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
@@ -40,7 +40,6 @@ class EmpController extends Controller
             }
             $filename = $filename . '.' . $fileExt;
             $file->move($destinationPath, $filename);
-
         }
 
         $user           = new User;
@@ -91,7 +90,6 @@ class EmpController extends Controller
         //$emp->userrole()->create(['role_id' => $request->role]);
 
         return json_encode(['title' => 'Success', 'message' => 'Employee added successfully', 'class' => 'modal-header-success']);
-
     }
 
     public function showEmployee()
@@ -127,7 +125,6 @@ class EmpController extends Controller
             }
             $filename = $filename . '.' . $fileExt;
             $file->move($destinationPath, $filename);
-
         }
 
         $photo             = $filename;
@@ -288,167 +285,167 @@ class EmpController extends Controller
 
         /* try {*/
         foreach ($files as $file) {
-            Excel::load($file, function ($reader) {
-                $rows = $reader->get(['emp_name', 'emp_code', 'emp_status', 'role', 'gender', 'dob', 'doj', 'mob_number', 'qualification', 'emer_number', 'pan_number', 'father_name', 'address', 'permanent_address', 'formalities', 'offer_acceptance', 'prob_period', 'doc', 'department', 'salary', 'account_number', 'bank_name', 'ifsc_code', 'pf_account_number', 'un_number', 'pf_status', 'dor', 'notice_period', 'last_working_day', 'full_final']);
+            Excel::load(
+                $file,
+                function ($reader) {
+                    $rows = $reader->get(['emp_name', 'emp_code', 'emp_status', 'role', 'gender', 'dob', 'doj', 'mob_number', 'qualification', 'emer_number', 'pan_number', 'father_name', 'address', 'permanent_address', 'formalities', 'offer_acceptance', 'prob_period', 'doc', 'department', 'salary', 'account_number', 'bank_name', 'ifsc_code', 'pf_account_number', 'un_number', 'pf_status', 'dor', 'notice_period', 'last_working_day', 'full_final']);
 
-                foreach ($rows as $row) {
-                    \Log::info($row->role);
-                    $user           = new User;
-                    $user->name     = $row->emp_name;
-                    $user->email    = str_replace(' ', '_', $row->emp_name) . '@sipi-ip.sg';
-                    $user->password = bcrypt('123456');
-                    $user->save();
-                    $attachment         = new Employee();
-                    $attachment->photo  = '/img/Emp.jpg';
-                    $attachment->name   = $row->emp_name;
-                    $attachment->code   = $row->emp_code;
-                    $attachment->status = convertStatus($row->emp_status);
+                    foreach ($rows as $row) {
+                        \Log::info($row->role);
+                        $user           = new User;
+                        $user->name     = $row->emp_name;
+                        $user->email    = str_replace(' ', '_', $row->emp_name) . '@sipi-ip.sg';
+                        $user->password = bcrypt('123456');
+                        $user->save();
+                        $attachment         = new Employee();
+                        $attachment->photo  = '/img/Emp.jpg';
+                        $attachment->name   = $row->emp_name;
+                        $attachment->code   = $row->emp_code;
+                        $attachment->status = convertStatus($row->emp_status);
 
-                    if (empty($row->gender)) {
-                        $attachment->gender = 'Not Exist';
-                    } else {
-                        $attachment->gender = $row->gender;
-                    }
-                    if (empty($row->dob)) {
-                        $attachment->date_of_birth = '0000-00-00';
-                    } else {
-                        $attachment->date_of_birth = date('Y-m-d', strtotime($row->dob));
-                    }
-                    if (empty($row->doj)) {
-                        $attachment->date_of_joining = '0000-00-00';
-                    } else {
-                        $attachment->date_of_joining = date('Y-m-d', strtotime($row->doj));
-                    }
-                    if (empty($row->mob_number)) {
-                        $attachment->number = '1234567890';
-                    } else {
-                        $attachment->number = $row->mob_number;
-                    }
-                    if (empty($row->qualification)) {
-                        $attachment->qualification = 'Not Exist';
-                    } else {
-                        $attachment->qualification = $row->qualification;
-                    }
-                    if (empty($row->emer_number)) {
-                        $attachment->emergency_number = '1234567890';
-                    } else {
-                        $attachment->emergency_number = $row->emer_number;
-                    }
-                    if (empty($row->pan_number)) {
-                        $attachment->pan_number = 'Not Exist';
-                    } else {
-                        $attachment->pan_number = $row->pan_number;
-                    }
-                    if (empty($row->father_name)) {
-                        $attachment->father_name = 'Not Exist';
-                    } else {
-                        $attachment->father_name = $row->father_name;
-                    }
-                    if (empty($row->address)) {
-                        $attachment->current_address = 'Not Exist';
-                    } else {
-                        $attachment->current_address = $row->address;
-                    }
-                    if (empty($row->permanent_address)) {
-                        $attachment->permanent_address = 'Not Exist';
-                    } else {
-                        $attachment->permanent_address = $row->permanent_address;
-                    }
-                    if (empty($row->emp_formalities)) {
-                        $attachment->formalities = '1';
-                    } else {
-                        $attachment->formalities = $row->emp_formalities;
-                    }
-                    if (empty($row->offer_acceptance)) {
-                        $attachment->offer_acceptance = '1';
-                    } else {
-                        $attachment->offer_acceptance = $row->offer_acceptance;
-                    }
-                    if (empty($row->prob_period)) {
-                        $attachment->probation_period = 'Not Exist';
-                    } else {
-                        $attachment->probation_period = $row->prob_period;
-                    }
-                    if (empty($row->doc)) {
-                        $attachment->date_of_confirmation = '0000-00-00';
-                    } else {
-                        $attachment->date_of_confirmation = date('Y-m-d', strtotime($row->doc));
-                    }
-                    if (empty($row->department)) {
-                        $attachment->department = 'Not Exist';
-                    } else {
-                        $attachment->department = $row->department;
-                    }
-                    if (empty($row->salary)) {
-                        $attachment->salary = '00000';
-                    } else {
-                        $attachment->salary = $row->salary;
-                    }
-                    if (empty($row->account_number)) {
-                        $attachment->account_number = 'Not Exist';
-                    } else {
-                        $attachment->account_number = $row->account_number;
-                    }
-                    if (empty($row->bank_name)) {
-                        $attachment->bank_name = 'Not Exist';
-                    } else {
-                        $attachment->bank_name = $row->bank_name;
-                    }
-                    if (empty($row->ifsc_code)) {
-                        $attachment->ifsc_code = 'Not Exist';
-                    } else {
-                        $attachment->ifsc_code = $row->ifsc_code;
-                    }
-                    if (empty($row->pf_account_number)) {
-                        $attachment->pf_account_number = 'Not Exist';
-                    } else {
-                        $attachment->pf_account_number = $row->pf_account_number;
-                    }
-                    if (empty($row->un_number)) {
-                        $attachment->un_number = 'Not Exist';
-                    } else {
-                        $attachment->un_number = $row->un_number;
-                    }
-                    if (empty($row->pf_status)) {
-                        $attachment->pf_status = '1';
-                    } else {
-                        $attachment->pf_status = $row->pf_status;
-                    }
-                    if (empty($row->dor)) {
-                        $attachment->date_of_resignation = '0000-00-00';
-                    } else {
-                        $attachment->date_of_resignation = date('Y-m-d', strtotime($row->dor));
-                    }
-                    if (empty($row->notice_period)) {
-                        $attachment->notice_period = 'Not exist';
-                    } else {
-                        $attachment->notice_period = $row->notice_period;
-                    }
-                    if (empty($row->last_working_day)) {
-                        $attachment->last_working_day = '0000-00-00';
-                    } else {
-                        $attachment->last_working_day = date('Y-m-d', strtotime($row->last_working_day));
-                    }
-                    if (empty($row->full_final)) {
-                        $attachment->full_final = 'Not exist';
-                    } else {
-                        $attachment->full_final = $row->full_final;
-                    }
-                    $attachment->user_id = $user->id;
-                    $attachment->save();
+                        if (empty($row->gender)) {
+                            $attachment->gender = 'Not Exist';
+                        } else {
+                            $attachment->gender = $row->gender;
+                        }
+                        if (empty($row->dob)) {
+                            $attachment->date_of_birth = '0000-00-00';
+                        } else {
+                            $attachment->date_of_birth = date('Y-m-d', strtotime($row->dob));
+                        }
+                        if (empty($row->doj)) {
+                            $attachment->date_of_joining = '0000-00-00';
+                        } else {
+                            $attachment->date_of_joining = date('Y-m-d', strtotime($row->doj));
+                        }
+                        if (empty($row->mob_number)) {
+                            $attachment->number = '1234567890';
+                        } else {
+                            $attachment->number = $row->mob_number;
+                        }
+                        if (empty($row->qualification)) {
+                            $attachment->qualification = 'Not Exist';
+                        } else {
+                            $attachment->qualification = $row->qualification;
+                        }
+                        if (empty($row->emer_number)) {
+                            $attachment->emergency_number = '1234567890';
+                        } else {
+                            $attachment->emergency_number = $row->emer_number;
+                        }
+                        if (empty($row->pan_number)) {
+                            $attachment->pan_number = 'Not Exist';
+                        } else {
+                            $attachment->pan_number = $row->pan_number;
+                        }
+                        if (empty($row->father_name)) {
+                            $attachment->father_name = 'Not Exist';
+                        } else {
+                            $attachment->father_name = $row->father_name;
+                        }
+                        if (empty($row->address)) {
+                            $attachment->current_address = 'Not Exist';
+                        } else {
+                            $attachment->current_address = $row->address;
+                        }
+                        if (empty($row->permanent_address)) {
+                            $attachment->permanent_address = 'Not Exist';
+                        } else {
+                            $attachment->permanent_address = $row->permanent_address;
+                        }
+                        if (empty($row->emp_formalities)) {
+                            $attachment->formalities = '1';
+                        } else {
+                            $attachment->formalities = $row->emp_formalities;
+                        }
+                        if (empty($row->offer_acceptance)) {
+                            $attachment->offer_acceptance = '1';
+                        } else {
+                            $attachment->offer_acceptance = $row->offer_acceptance;
+                        }
+                        if (empty($row->prob_period)) {
+                            $attachment->probation_period = 'Not Exist';
+                        } else {
+                            $attachment->probation_period = $row->prob_period;
+                        }
+                        if (empty($row->doc)) {
+                            $attachment->date_of_confirmation = '0000-00-00';
+                        } else {
+                            $attachment->date_of_confirmation = date('Y-m-d', strtotime($row->doc));
+                        }
+                        if (empty($row->department)) {
+                            $attachment->department = 'Not Exist';
+                        } else {
+                            $attachment->department = $row->department;
+                        }
+                        if (empty($row->salary)) {
+                            $attachment->salary = '00000';
+                        } else {
+                            $attachment->salary = $row->salary;
+                        }
+                        if (empty($row->account_number)) {
+                            $attachment->account_number = 'Not Exist';
+                        } else {
+                            $attachment->account_number = $row->account_number;
+                        }
+                        if (empty($row->bank_name)) {
+                            $attachment->bank_name = 'Not Exist';
+                        } else {
+                            $attachment->bank_name = $row->bank_name;
+                        }
+                        if (empty($row->ifsc_code)) {
+                            $attachment->ifsc_code = 'Not Exist';
+                        } else {
+                            $attachment->ifsc_code = $row->ifsc_code;
+                        }
+                        if (empty($row->pf_account_number)) {
+                            $attachment->pf_account_number = 'Not Exist';
+                        } else {
+                            $attachment->pf_account_number = $row->pf_account_number;
+                        }
+                        if (empty($row->un_number)) {
+                            $attachment->un_number = 'Not Exist';
+                        } else {
+                            $attachment->un_number = $row->un_number;
+                        }
+                        if (empty($row->pf_status)) {
+                            $attachment->pf_status = '1';
+                        } else {
+                            $attachment->pf_status = $row->pf_status;
+                        }
+                        if (empty($row->dor)) {
+                            $attachment->date_of_resignation = '0000-00-00';
+                        } else {
+                            $attachment->date_of_resignation = date('Y-m-d', strtotime($row->dor));
+                        }
+                        if (empty($row->notice_period)) {
+                            $attachment->notice_period = 'Not exist';
+                        } else {
+                            $attachment->notice_period = $row->notice_period;
+                        }
+                        if (empty($row->last_working_day)) {
+                            $attachment->last_working_day = '0000-00-00';
+                        } else {
+                            $attachment->last_working_day = date('Y-m-d', strtotime($row->last_working_day));
+                        }
+                        if (empty($row->full_final)) {
+                            $attachment->full_final = 'Not exist';
+                        } else {
+                            $attachment->full_final = $row->full_final;
+                        }
+                        $attachment->user_id = $user->id;
+                        $attachment->save();
 
-                    $userRole          = new UserRole();
-                    $userRole->role_id = convertRole($row->role);
-                    $userRole->user_id = $user->id;
-                    $userRole->save();
+                        $userRole          = new UserRole();
+                        $userRole->role_id = convertRole($row->role);
+                        $userRole->user_id = $user->id;
+                        $userRole->save();
+                    }
 
+                    return 1;
+                    //return redirect('upload_form');*/
                 }
-
-                return 1;
-                //return redirect('upload_form');*/
-            }
             );
-
         }
         /*catch (\Exception $e) {
            return $e->getMessage();*/
@@ -469,12 +466,14 @@ class EmpController extends Controller
             } elseif ($string != '' && $column == '') {
                 \Session::flash('failed', ' Please select category.');
                 return redirect()->to('employee-manager');
-            }elseif ($column == 'email') {
-                $emps = User::with('employee')->where($column,'like', "%$string%")->paginate(20);
+            } elseif ($column == 'email') {
+                $emps = User::with('employee')->where($column, 'like', "%$string%")->paginate(20);
             } else {
-                $emps = User::whereHas('employee', function ($q) use ($column, $string) {
-                    $q->whereRaw($column . " like '%" . $string . "%'");
-                }
+                $emps = User::whereHas(
+                    'employee',
+                    function ($q) use ($column, $string) {
+                        $q->whereRaw($column . " like '%" . $string . "%'");
+                    }
                 )->with('employee')->paginate(20);
             }
 
@@ -485,9 +484,11 @@ class EmpController extends Controller
             } elseif ($column == 'email') {
                 $emps = User::with('employee')->where($request->column, $request->string)->paginate(20);
             } else {
-                $emps = User::whereHas('employee', function ($q) use ($column, $string) {
-                    $q->whereRaw($column . " like '%" . $string . "%'");
-                }
+                $emps = User::whereHas(
+                    'employee',
+                    function ($q) use ($column, $string) {
+                        $q->whereRaw($column . " like '%" . $string . "%'");
+                    }
                 )->with('employee')->get();
             }
 
@@ -498,40 +499,40 @@ class EmpController extends Controller
             $headers = ['id', 'photo', 'code', 'name', 'status', 'gender', 'date_of_birth', 'date_of_joining', 'number', 'qualification', 'emergency_number', 'pan_number', 'father_name', 'current_address', 'permanent_address', 'formalities', 'offer_acceptance', 'probation_period', 'date_of_confirmation', 'department', 'salary', 'account_number', 'bank_name', 'ifsc_code', 'pf_account_number', 'un_number', 'pf_status', 'date_of_resignation', 'notice_period', 'last_working_day', 'full_final', 'user_id', 'created_at', 'updated_at'];
             $file->fputcsv($headers);
             foreach ($emps as $emp) {
-                $file->fputcsv([
-                                   $emp->id,
-                                   (
-                                   $emp->employee->photo) ? $emp->employee->photo : 'Not available',
-                                   $emp->employee->code,
-                                   $emp->employee->name,
-                                   $emp->employee->status,
-                                   $emp->employee->gender,
-                                   $emp->employee->date_of_birth,
-                                   $emp->employee->date_of_joining,
-                                   $emp->employee->number,
-                                   $emp->employee->qualification,
-                                   $emp->employee->emergency_number,
-                                   $emp->employee->pan_number,
-                                   $emp->employee->father_name,
-                                   $emp->employee->current_address,
-                                   $emp->employee->permanent_address,
-                                   $emp->employee->formalities,
-                                   $emp->employee->offer_acceptance,
-                                   $emp->employee->probation_period,
-                                   $emp->employee->date_of_confirmation,
-                                   $emp->employee->department,
-                                   $emp->employee->salary,
-                                   $emp->employee->account_number,
-                                   $emp->employee->bank_name,
-                                   $emp->employee->ifsc_code,
-                                   $emp->employee->pf_account_number,
-                                   $emp->employee->un_number,
-                                   $emp->employee->pf_status,
-                                   $emp->employee->date_of_resignation,
-                                   $emp->employee->notice_period,
-                                   $emp->employee->last_working_day,
-                                   $emp->employee->full_final
-                               ]
+                $file->fputcsv(
+                    [
+                        $emp->id,
+                        ($emp->employee->photo) ? $emp->employee->photo : 'Not available',
+                        $emp->employee->code,
+                        $emp->employee->name,
+                        $emp->employee->status,
+                        $emp->employee->gender,
+                        $emp->employee->date_of_birth,
+                        $emp->employee->date_of_joining,
+                        $emp->employee->number,
+                        $emp->employee->qualification,
+                        $emp->employee->emergency_number,
+                        $emp->employee->pan_number,
+                        $emp->employee->father_name,
+                        $emp->employee->current_address,
+                        $emp->employee->permanent_address,
+                        $emp->employee->formalities,
+                        $emp->employee->offer_acceptance,
+                        $emp->employee->probation_period,
+                        $emp->employee->date_of_confirmation,
+                        $emp->employee->department,
+                        $emp->employee->salary,
+                        $emp->employee->account_number,
+                        $emp->employee->bank_name,
+                        $emp->employee->ifsc_code,
+                        $emp->employee->pf_account_number,
+                        $emp->employee->un_number,
+                        $emp->employee->pf_status,
+                        $emp->employee->date_of_resignation,
+                        $emp->employee->notice_period,
+                        $emp->employee->last_working_day,
+                        $emp->employee->full_final
+                    ]
                 );
             }
 
@@ -563,7 +564,6 @@ class EmpController extends Controller
 
             return json_encode('failed');
         }
-
     }
 
     public function doPromotion()
@@ -614,5 +614,4 @@ class EmpController extends Controller
 
         return view('hrms.promotion.show_promotion', compact('promotions'));
     }
-
 }

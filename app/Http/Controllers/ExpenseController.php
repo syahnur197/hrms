@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Expense;
+use App\Models\Expense;
 use App\Models\Employee;
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 
@@ -29,7 +29,6 @@ class ExpenseController extends Controller
 
         \Session::flash('flash_message', 'Expense successfully added!');
         return redirect()->back();
-
     }
 
     public function showExpense()
@@ -60,7 +59,6 @@ class ExpenseController extends Controller
 
         \Session::flash('flash_message', 'Expense successfully updated!');
         return redirect('expense-list');
-
     }
 
     public function doDelete($id)
@@ -70,6 +68,5 @@ class ExpenseController extends Controller
 
         \Session::flash('flash_message', 'Expense successfully Deleted!');
         return redirect('expense-list');
-
     }
 }

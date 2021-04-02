@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Role;
-use App\User;
+use App\Models\User;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 
@@ -17,7 +17,7 @@ class RoleController extends Controller
         return view('hrms.role.add_role');
     }
 
-    Public function processRole(Request $request)
+    public function processRole(Request $request)
     {
         //Role::create(['name' => $request->name, 'description' => $request->description]);
         $role = new Role;
@@ -26,7 +26,6 @@ class RoleController extends Controller
         $role->save();
         \Session::flash('flash_message', 'Role successfully added!');
         return redirect()->back();
-
     }
 
     public function showRole()
@@ -65,5 +64,4 @@ class RoleController extends Controller
         \Session::flash('flash_message', 'Role successfully Deleted!');
         return redirect('role-list');
     }
-
 }

@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Jobs\Job;
-use App\User;
+use App\Models\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -48,14 +48,12 @@ class ExportData extends Job implements ShouldQueue
                 ->get();
         }
 
-        Excel::create('Filename', function($excel) use($emps) {
+        Excel::create('Filename', function ($excel) use ($emps) {
 
-            $excel->sheet('Sheetname', function($sheet) use($emps) {
+            $excel->sheet('Sheetname', function ($sheet) use ($emps) {
 
                 $sheet->fromArray($emps);
-
             });
-
         })->export('xls');
     }
 }
