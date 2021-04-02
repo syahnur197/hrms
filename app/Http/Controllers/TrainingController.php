@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TrainingInvite;
-use App\Models\TrainingProgram;
 use App\Models\User;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
+use App\Models\TrainingInvite;
+use App\Models\TrainingProgram;
+use Exception;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class TrainingController extends Controller
 {
@@ -23,7 +24,7 @@ class TrainingController extends Controller
         $programs->description = $request->description;
         $programs->save();
 
-        \Session::flash('flash_message', 'Training Program successfully added!');
+        Session::flash('flash_message', 'Training Program successfully added!');
         return redirect()->back();
     }
 
@@ -53,7 +54,7 @@ class TrainingController extends Controller
         }
         $edit->save();
 
-        \Session::flash('flash_message', 'Training Program successfully updated!');
+        Session::flash('flash_message', 'Training Program successfully updated!');
         return redirect('show-training-program');
     }
     public function deleteTrainingProgram($id)
@@ -61,7 +62,7 @@ class TrainingController extends Controller
         $program = TrainingProgram::find($id);
         $program->delete();
 
-        \Session::flash('flash_message', 'Training Program successfully deleted!');
+        Session::flash('flash_message', 'Training Program successfully deleted!');
         return redirect('show-training-program');
     }
 
@@ -92,11 +93,11 @@ class TrainingController extends Controller
                     $i++;
                 }
             }
-        } catch (\Exception $e) {
-            \Log::info($e->getMessage() . ' on ' . $e->getLine() . ' in ' . $e->getFile());
+        } catch (Exception $e) {
+            Log::info($e->getMessage() . ' on ' . $e->getLine() . ' in ' . $e->getFile());
         }
 
-        \Session::flash('flash_message', $i . ' out of ' . $totalMembers . ' members have been invited for the training!');
+        Session::flash('flash_message', $i . ' out of ' . $totalMembers . ' members have been invited for the training!');
         return redirect()->back();
     }
 
@@ -126,7 +127,7 @@ class TrainingController extends Controller
         $model->date_to = $request->date_to;
         $model->save();
 
-        \Session::flash('flash_message', 'Training Program successfully updated!');
+        Session::flash('flash_message', 'Training Program successfully updated!');
         return redirect('show-training-invite');
     }
 
@@ -135,7 +136,7 @@ class TrainingController extends Controller
         $invite = TrainingInvite::where('id', $id);
         $invite->delete();
 
-        \Session::flash('flash_message', 'Member successfully removed!');
+        Session::flash('flash_message', 'Member successfully removed!');
         return redirect('show-training-invite');
     }
 }

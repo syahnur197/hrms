@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Asset;
-use App\Models\AssignAsset;
-use App\Models\Employee;
 use App\Models\User;
+use App\Models\Asset;
+use App\Models\Employee;
+use App\Models\AssignAsset;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
+use Illuminate\Support\Facades\Session;
 
 class AssetController extends Controller
 {
@@ -32,7 +31,7 @@ class AssetController extends Controller
         $asset->name = $request->name;
         $asset->description = $request->description;
         $asset->save();
-        \Session::flash('flash_message', 'Asset successfully added!');
+        Session::flash('flash_message', 'Asset successfully added!');
         return redirect()->back();
     }
 
@@ -73,7 +72,7 @@ class AssetController extends Controller
             $edit->description = $description;
         }
         $edit->save();
-        \Session::flash('flash_message', 'Asset successfully updated!');
+        Session::flash('flash_message', 'Asset successfully updated!');
         return redirect('asset-listing');
     }
 
@@ -85,7 +84,7 @@ class AssetController extends Controller
     {
         $asset = Asset::find($id);
         $asset->delete();
-        \Session::flash('flash_message', 'Asset successfully Deleted!');
+        Session::flash('flash_message', 'Asset successfully Deleted!');
         return redirect('asset-listing');
     }
 
@@ -113,7 +112,7 @@ class AssetController extends Controller
         $assignment->date_of_release = date_format(date_create($request->dor), 'Y-m-d');
         $assignment->save();
 
-        \Session::flash('flash_message', 'Asset successfully assigned!');
+        Session::flash('flash_message', 'Asset successfully assigned!');
         return redirect()->back();
     }
 
@@ -157,7 +156,7 @@ class AssetController extends Controller
         $assignment->save();
 
 
-        \Session::flash('flash_message', 'Asset Assignment successfully updated!');
+        Session::flash('flash_message', 'Asset Assignment successfully updated!');
         return redirect('assignment-listing');
     }
 
@@ -171,7 +170,7 @@ class AssetController extends Controller
         $assign = AssignAsset::find($id);
         $assign->delete();
 
-        \Session::flash('flash_message', 'Asset Assignment successfully Deleted!');
+        Session::flash('flash_message', 'Asset Assignment successfully Deleted!');
         return redirect('assignment-listing');
     }
 }

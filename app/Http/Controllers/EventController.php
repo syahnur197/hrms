@@ -9,6 +9,7 @@ use App\Models\MeetingAttendee;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 
 class EventController extends Controller
 {
@@ -62,7 +63,7 @@ class EventController extends Controller
       });
     }
     //return json_encode('success');
-    \Session::flash('flash_message', 'event successfully saved!');
+    Session::flash('flash_message', 'event successfully saved!');
   }
 
   public function meeting()

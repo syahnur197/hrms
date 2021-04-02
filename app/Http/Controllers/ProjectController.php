@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Client;
-use App\Models\Employee;
-use App\Models\Project;
-use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\AssignProject;
-
 use App\Http\Requests;
+use App\Models\Client;
+use App\Models\Project;
+use App\Models\Employee;
+use Illuminate\Http\Request;
+use App\Models\AssignProject;
+use Illuminate\Support\Facades\Session;
 
 class ProjectController extends Controller
 {
@@ -27,25 +27,10 @@ class ProjectController extends Controller
         $project->fill(array_except($request->all(), '_token'));
         $project->save();
 
-        \Session::flash('flash_message', 'Project added successfully');
+        Session::flash('flash_message', 'Project added successfully');
 
         return redirect()->back();
     }
-
-
-    //    public function assignProject()
-    //    {
-    //        $model = new \stdClass();
-    //        $model->projects = Project::get();
-    //        $model->employees = Employee::whereHas('userrole', function($q)
-    //        {
-    //            $q->whereIn('role_id', ['3', '4']);
-    //        })
-    //            ->get();
-    //
-    //        return view('hrms.projects.assign', compact('model'));
-    //
-    //    }
 
     public function validateCode($code)
     {
@@ -54,7 +39,6 @@ class ProjectController extends Controller
         if ($client) {
             json_encode(['status' => false]);
         }
-        // json_encode(['status' => true]);
     }
 
     public function processProject(Request $request)
@@ -62,11 +46,10 @@ class ProjectController extends Controller
         $project = new Project;
         $project->name = $request->project_name;
         $project->description = $request->description;
-        //  $project->fill(array_except($request->all(),'_token'));
         $project->code = $request->code;
         $project->client_id = $request->client_id;
         $project->save();
-        \Session::flash('flash_message', 'Project successfully added!');
+        Session::flash('flash_message', 'Project successfully added!');
         return redirect()->back();
     }
 
@@ -81,8 +64,6 @@ class ProjectController extends Controller
     {
         $model = new \stdClass();
         $project = Project::with('client')->where(['id' => $projectId])->first();
-        //  return $model->project;
-        // $model->description =
         $clients = Client::get();
         foreach ($clients as $client) {
             $model->clients[$client->id] = $client->name;
@@ -113,7 +94,7 @@ class ProjectController extends Controller
         }
 
         $edit->save();
-        \Session::flash('flash_message', 'project successfully updated!');
+        Session::flash('flash_message', 'project successfully updated!');
         return redirect('list-project');
     }
 
@@ -121,7 +102,7 @@ class ProjectController extends Controller
     {
         $project = project::find($id);
         $project->delete();
-        \Session::flash('flash_message', 'Project successfully Deleted!');
+        Session::flash('flash_message', 'Project successfully Deleted!');
         return redirect('list-project');
     }
 
@@ -142,7 +123,7 @@ class ProjectController extends Controller
         $assignment->date_of_release = date_format(date_create($request->dor), 'Y-m-d');
         $assignment->save();
 
-        \Session::flash('flash_message', 'Project successfully assigned!');
+        Session::flash('flash_message', 'Project successfully assigned!');
         return redirect()->back();
     }
 
@@ -186,7 +167,7 @@ class ProjectController extends Controller
         $assignment->save();
 
 
-        \Session::flash('flash_message', 'project Assignment successfully updated!');
+        Session::flash('flash_message', 'project Assignment successfully updated!');
         return redirect('project-assignment-listing');
     }
 
@@ -200,7 +181,7 @@ class ProjectController extends Controller
         $assign = AssignProject::find($id);
         $assign->delete();
 
-        \Session::flash('flash_message', 'Project Assignment successfully Deleted!');
+        Session::flash('flash_message', 'Project Assignment successfully Deleted!');
         return redirect('project-assignment-listing');
     }
 }

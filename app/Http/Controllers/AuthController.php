@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Event;
 use App\Models\Meeting;
-use App\Models\Role;
-use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Mail\Mailer;
-use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Contracts\Mail\Mailer;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -32,15 +32,15 @@ class AuthController extends Controller
         $user = User::where('email', $email)->first();
         if ($user) {
 
-            if (\Auth::attempt(['email' => $email, 'password' => $password])) {
+            if (Auth::attempt(['email' => $email, 'password' => $password])) {
                 return redirect()->to('welcome');
             } else {
-                \Session::flash('class', 'alert-danger');
-                \Session::flash('message', 'User id or password does not match!');
+                Session::flash('class', 'alert-danger');
+                Session::flash('message', 'User id or password does not match!');
             }
         } else {
-            \Session::flash('class', 'alert-danger');
-            \Session::flash('message', 'User id or password does not match!');
+            Session::flash('class', 'alert-danger');
+            Session::flash('message', 'User id or password does not match!');
         }
 
         return redirect()->to('/');
@@ -48,7 +48,7 @@ class AuthController extends Controller
 
     public function doLogout()
     {
-        \Auth::logout();
+        Auth::logout();
 
         return redirect()->to('/');
     }
@@ -94,17 +94,17 @@ class AuthController extends Controller
     public function processPasswordChange(Request $request)
     {
         $password = $request->old;
-        $user     = User::where('id', \Auth::user()->id)->first();
+        $user     = User::where('id', Auth::user()->id)->first();
 
 
         if (Hash::check($password, $user->password)) {
             $user->password = bcrypt($request->new);
             $user->save();
-            \Auth::logout();
+            Auth::logout();
 
             return redirect()->to('/')->with('message', 'Password updated! LOGIN again with updated password.');
         } else {
-            \Session::flash('flash_message', 'The supplied password does not matches with the one we have in records');
+            Session::flash('flash_message', 'The supplied password does not matches with the one we have in records');
 
             return redirect()->back();
         }
@@ -129,7 +129,8 @@ class AuthController extends Controller
                 $message->to($user->email, $user->name)->subject('Your new password');
             });
 
-            \DB::table('users')->where('email', $email)->update(['password' => bcrypt($string)]);
+            $user->password = bcrypt($string);
+            $user->save();
 
             return redirect()->to('/')->with('message', 'Login with your new password received on your email');
         } else {

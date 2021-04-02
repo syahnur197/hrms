@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use Exception;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Session;
 
 /**
  * Class ClientController
@@ -28,8 +29,7 @@ class ClientController extends Controller
     public function validateCode($code)
     {
         $client = Client::where('code', $code)->first();
-        if($client)
-        {
+        if ($client) {
             return json_encode(['status' => false]);
         }
         return json_encode(['status' => true]);
@@ -43,9 +43,9 @@ class ClientController extends Controller
     public function saveClient(Request $request)
     {
         $client = new Client();
-        $client->fill(array_except($request->all(),'_token'));
+        $client->fill(array_except($request->all(), '_token'));
         $client->save();
-        \Session::flash('flash_message', 'Client saved successfully');
+        Session::flash('flash_message', 'Client saved successfully');
         return redirect()->back();
     }
 
@@ -82,22 +82,19 @@ class ClientController extends Controller
             $client->fill(array_except($request->all(), '_token'));
             $client->save();
 
-            \Session::flash('flash_message', 'Client successfully updated');
-        }
-        catch(\Exception $e)
-        {
-            \Session::flash('flash_message', $e->getMessage());
+            Session::flash('flash_message', 'Client successfully updated');
+        } catch (Exception $e) {
+            Session::flash('flash_message', $e->getMessage());
         }
         return redirect()->back();
-
     }
 
     public function doDelete($id)
     {
-        $client = Client::where('id',$id);
+        $client = Client::where('id', $id);
         $client->delete();
 
-        \Session::flash('flash_message', 'Client successfully Deleted!');
+        Session::flash('flash_message', 'Client successfully Deleted!');
         return redirect('list-client');
     }
 }

@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\EmployeeLeave;
-use App\Models\LeaveDraft;
-use App\Models\Employee;
-use App\Models\Holiday;
-use App\Models\HolidayFilenames;
-use App\Models\LeaveType;
+use Exception;
 use App\Models\Team;
 use App\Models\User;
-use Illuminate\Contracts\Mail\Mailer;
-
-use Illuminate\Http\Request;
 use App\Http\Requests;
-use Illuminate\Support\Facades\Input;
+use App\Models\Holiday;
+use App\Models\Employee;
+use App\Models\LeaveType;
+use App\Models\LeaveDraft;
+use Illuminate\Http\Request;
+use App\Models\EmployeeLeave;
+use App\Models\HolidayFilenames;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Contracts\Mail\Mailer;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Session;
 
 class LeaveController extends Controller
 {
@@ -47,7 +49,7 @@ class LeaveController extends Controller
     $leave->description = $request->description;
     $leave->save();
 
-    \Session::flash('flash_message', 'Leave Type successfully added!');
+    Session::flash('flash_message', 'Leave Type successfully added!');
     return redirect()->back();
   }
 
@@ -89,7 +91,7 @@ class LeaveController extends Controller
     }
     $edit->save();
 
-    \Session::flash('flash_message', 'Leave Type successfully updated!');
+    Session::flash('flash_message', 'Leave Type successfully updated!');
     return redirect('leave-type-listing');
   }
 
@@ -101,7 +103,7 @@ class LeaveController extends Controller
   {
     $leave = LeaveType::find($id);
     $leave->delete();
-    \Session::flash('flash_message1', 'Leave Type successfully Deleted!');
+    Session::flash('flash_message1', 'Leave Type successfully Deleted!');
     return redirect('leave-type-listing');
   }
 
@@ -120,6 +122,8 @@ class LeaveController extends Controller
    */
   public function processApply(Request $request)
   {
+    $user = $request->user();
+
     $days = explode('days leave', $request->number_of_days);
     if (sizeof($days) < 2) {
       $days = explode('day leave', $request->number_of_days);
@@ -128,7 +132,7 @@ class LeaveController extends Controller
 
     $leave = new EmployeeLeave;
 
-    $team = Team::where('member_id', \Auth::user()->employee->id)->first();
+    $team = Team::where('member_id', $user->employee->id)->first();
     if ($team) {
       $tl_id = $team->leader_id;
       $manager_id = $team->manager_id;
@@ -142,7 +146,7 @@ class LeaveController extends Controller
       $emails[] = ['email' => $teamLead->user->email, 'name' => $teamLead->user->name];
     }
 
-    $leave->user_id = \Auth::user()->id;
+    $leave->user_id = $user->id;
     $leave->date_from = date_format(date_create($request->dateFrom), 'Y-m-d');
     $leave->date_to = date_format(date_create($request->dateTo), 'Y-m-d');
     $leave->from_time = $request->time_from;
@@ -154,38 +158,20 @@ class LeaveController extends Controller
     $leave->save();
 
 
-    $leaveType = LeaveType::where('id', $request->leave_type)->first();
-
-    $emails[] = ['email' => env('HR_EMAIL'), 'name' => env('HR_NAME')];
-
-    $leaveDraft = LeaveDraft::where('leave_type_id', $request->leave_type)->first();
-
-    $subject = isset($leaveDraft->subject) ? $leaveDraft->subject : '';
-    $user = \Auth::user();
-    $toReplace = ['%name%', '%leave_type%', '%from_date%', '%to_date%', '%days%'];
-    $replaceWith = [$user->name, $leaveType->leave_type, $request->dateFrom, $request->dateTo, $number_of_days];
-    $body = str_replace($toReplace, $replaceWith, '');
-
-    //now send a mail
-    /* $this->mailer->send('emails.leave_approval', ['body' => $body], function ($message) use ($emails, $user, $subject) {
-        foreach ($emails as $email) {
-          $message->from($user->email, $user->name);
-          $message->to($email['email'], $email['name'])->subject($subject);
-        }
-      });*/
+    // we should send email here -- from syahnur
 
 
-    \Session::flash('flash_message', 'Leave successfully applied!');
+    Session::flash('flash_message', 'Leave successfully applied!');
     return redirect()->back();
   }
 
   /**
    * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
    */
-  public function showMyLeave()
+  public function showMyLeave(Request $request)
   {
 
-    $leaves = EmployeeLeave::where('user_id', \Auth::user()->id)->paginate(15);
+    $leaves = EmployeeLeave::where('user_id', $request->user()->id)->paginate(15);
     return view('hrms.leave.show_my_leaves', compact('leaves'));
   }
 
@@ -193,10 +179,12 @@ class LeaveController extends Controller
   /**
    * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
    */
-  public function showAllLeave()
+  public function showAllLeave(Request $request)
   {
-    if (!\Auth::user()->isHR()) {
-      $leaves = EmployeeLeave::with('user.employee')->where('tl_id', \Auth::user()->id)->orWhere('manager_id', \Auth::user()->id)->paginate(15);
+    $user = $request->user();
+
+    if (!$user->isHR()) {
+      $leaves = EmployeeLeave::with('user.employee')->where('tl_id', $user->id)->orWhere('manager_id', $user->id)->paginate(15);
     } else {
       $leaves = EmployeeLeave::with('user.employee')->paginate(15);
     }
@@ -229,7 +217,7 @@ class LeaveController extends Controller
     $draft->leave_type_id = $request->leave_type;
     $draft->save();
 
-    \Session::flash('flash_message', 'Leave successfully drafted!');
+    Session::flash('flash_message', 'Leave successfully drafted!');
     return redirect()->back();
   }
 
@@ -342,7 +330,7 @@ class LeaveController extends Controller
         /**
          * First we build a query string which is common in both cases whether we have a condition set or not
          */
-        $leaves = \DB::table('users')->select(
+        $leaves = DB::table('users')->select(
           'users.id',
           'users.name',
           'employees.code',
@@ -376,7 +364,7 @@ class LeaveController extends Controller
         /**
          * First we build a query string which is common in both cases whether we have a condition set or not
          */
-        $leaves = \DB::table('users')->select('users.id', 'users.name', 'employees.code', 'employee_leaves.days', 'employee_leaves.date_from', 'employee_leaves.date_to', 'employee_leaves.status', 'leave_types.leave_type', 'employee_leaves.remarks')->join('employees', 'employees.user_id', '=', 'users.id')->join('employee_leaves', 'employee_leaves.user_id', '=', 'users.id')->join('leave_types', 'leave_types.id', '=', 'employee_leaves.leave_type_id');
+        $leaves = DB::table('users')->select('users.id', 'users.name', 'employees.code', 'employee_leaves.days', 'employee_leaves.date_from', 'employee_leaves.date_to', 'employee_leaves.status', 'leave_types.leave_type', 'employee_leaves.remarks')->join('employees', 'employees.user_id', '=', 'users.id')->join('employee_leaves', 'employee_leaves.user_id', '=', 'users.id')->join('leave_types', 'leave_types.id', '=', 'employee_leaves.leave_type_id');
 
         if (!empty($column) && !empty($string) && empty($dateFrom) && empty($dateTo)) {
           $leaves = $leaves->whereRaw($data[$column] . " like '%" . $string . "%' ")->get();
@@ -413,7 +401,7 @@ class LeaveController extends Controller
 
         return response()->download(storage_path('export/') . $fileName);
       }
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
       return redirect()->back()->with('message', $e->getMessage());
     }
   }
@@ -454,7 +442,7 @@ class LeaveController extends Controller
     });
 
 
-    \DB::table('employee_leaves')->where('id', $leaveId)->update(['status' => '1', 'remarks' => $remarks]);
+    DB::table('employee_leaves')->where('id', $leaveId)->update(['status' => '1', 'remarks' => $remarks]);
     return json_encode('success');
   }
 
@@ -473,7 +461,7 @@ class LeaveController extends Controller
       $message->from('no-reply@dipi-ip.com', 'Digital IP Insights');
       $message->to($user->email, $user->name)->subject('Your leave has been disapproved');
     });
-    \DB::table('employee_leaves')->where('id', $leaveId)->update(['status' => '2', 'remarks' => $remarks]);
+    DB::table('employee_leaves')->where('id', $leaveId)->update(['status' => '2', 'remarks' => $remarks]);
     return json_encode('success');
   }
 
@@ -513,7 +501,7 @@ class LeaveController extends Controller
           $holiday->date = date_format(date_create($request->date), 'Y-m-d');
           $holiday->save();
         } else {
-          \Session::flash('flash_message', 'Please upload only excel files with xls or xlsx extension');
+          Session::flash('flash_message', 'Please upload only excel files with xls or xlsx extension');
 
           return redirect()->back();
         }
@@ -531,9 +519,7 @@ class LeaveController extends Controller
           return redirect()->back()->with('flash_message', 'Holidays successfully added');
         });
       }
-    } catch (\Exception $e) {
-      \Log::info($e->getMessage());
-      \Log::info($e->getLine());
+    } catch (Exception $e) {
       return redirect()->back()->with('flash_message', $e->getMessage());
     }
   }
@@ -559,7 +545,7 @@ class LeaveController extends Controller
     $holiday->date_from = date_format(date_create($request->date_from), 'Y-m-d');
     $holiday->save();
 
-    \Session::flash('flash_message', 'Holiday successfully updated!');
+    Session::flash('flash_message', 'Holiday successfully updated!');
     return redirect('holiday-listing');
   }
 
@@ -568,7 +554,7 @@ class LeaveController extends Controller
     $holiday = Holiday::find($id);
     $holiday->delete();
 
-    \Session::flash('flash_message', 'Holiday successfully deleted!');
+    Session::flash('flash_message', 'Holiday successfully deleted!');
     return redirect('holiday-listing');
   }
 }

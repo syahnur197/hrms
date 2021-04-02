@@ -1,4 +1,5 @@
 <?php
+
 /**
  * DataTables PHP libraries.
  *
@@ -12,6 +13,7 @@
  */
 
 namespace DataTables;
+
 if (!defined('DATATABLES')) exit();
 
 use
@@ -57,7 +59,8 @@ use
  *          ->json();
  *    </code>
  */
-class Editor extends Ext {
+class Editor extends Ext
+{
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Constructor
 	 */
@@ -74,13 +77,13 @@ class Editor extends Ext {
 	 *  @param string $pkey Primary key column name in the table given in the $table
 	 *    parameter. Can be given here or with the 'pkey' method.
 	 */
-	function __construct( $db=null, $table=null, $pkey=null )
+	function __construct($db = null, $table = null, $pkey = null)
 	{
 		// Set constructor parameters using the API - note that the get/set will
 		// ignore null values if they are used (i.e. not passed in)
-		$this->db( $db );
-		$this->table( $table );
-		$this->pkey( $pkey );
+		$this->db($db);
+		$this->table($table);
+		$this->pkey($pkey);
 	}
 
 
@@ -152,7 +155,7 @@ class Editor extends Ext {
 	 * process has been called.
 	 *  @return array Processed data array.
 	 */
-	public function data ()
+	public function data()
 	{
 		return $this->_out;
 	}
@@ -165,9 +168,9 @@ class Editor extends Ext {
 	 *  @return Database|self The Database connection instance if no parameter
 	 *    is given, or self if used as a setter.
 	 */
-	public function db ( $_=null )
+	public function db($_ = null)
 	{
-		return $this->_getSet( $this->_db, $_ );
+		return $this->_getSet($this->_db, $_);
 	}
 
 
@@ -182,12 +185,12 @@ class Editor extends Ext {
 	 *  @return Field[]|self Array of fields, or self if used as a setter.
 	 *  @see {@link Field} for field documentation.
 	 */
-	public function field ( $_=null )
+	public function field($_ = null)
 	{
-		if ( $_ !== null && !is_array($_) ) {
+		if ($_ !== null && !is_array($_)) {
 			$_ = func_get_args();
 		}
-		return $this->_getSet( $this->_fields, $_, true );
+		return $this->_getSet($this->_fields, $_, true);
 	}
 
 
@@ -201,12 +204,12 @@ class Editor extends Ext {
 	 *  @return Field[]|self Array of fields, or self if used as a setter.
 	 *  @see {@link Field} for field documentation.
 	 */
-	public function fields ( $_=null )
+	public function fields($_ = null)
 	{
-		if ( $_ !== null && !is_array($_) ) {
+		if ($_ !== null && !is_array($_)) {
 			$_ = func_get_args();
 		}
-		return $this->_getSet( $this->_fields, $_, true );
+		return $this->_getSet($this->_fields, $_, true);
 	}
 
 
@@ -222,9 +225,9 @@ class Editor extends Ext {
 	 *  @return string|self Primary key value if no parameter is given, or
 	 *    self if used as a setter.
 	 */
-	public function idPrefix ( $_=null )
+	public function idPrefix($_ = null)
 	{
-		return $this->_getSet( $this->_idPrefix, $_ );
+		return $this->_getSet($this->_idPrefix, $_);
 	}
 
 
@@ -235,7 +238,7 @@ class Editor extends Ext {
 	 *
 	 *   @return array Data given to `process()`.
 	 */
-	public function inData ()
+	public function inData()
 	{
 		return $this->_processData;
 	}
@@ -256,12 +259,12 @@ class Editor extends Ext {
 	 *  @return Join[]|self Array of joins, or self if used as a setter.
 	 *  @see {@link Join} for joining documentation.
 	 */
-	public function join ( $_=null )
+	public function join($_ = null)
 	{
-		if ( $_ !== null && !is_array($_) ) {
+		if ($_ !== null && !is_array($_)) {
 			$_ = func_get_args();
 		}
-		return $this->_getSet( $this->_join, $_, true );
+		return $this->_getSet($this->_join, $_, true);
 	}
 
 
@@ -275,13 +278,13 @@ class Editor extends Ext {
 	 *  @return string|self self if printing the JSON, or JSON representation of 
 	 *    the processed data if false is given as the first parameter.
 	 */
-	public function json ( $print=true )
+	public function json($print = true)
 	{
-		if ( $print ) {
-			echo json_encode( $this->_out );
+		if ($print) {
+			echo json_encode($this->_out);
 			return $this;
 		}
-		return json_encode( $this->_out );
+		return json_encode($this->_out);
 	}
 
 
@@ -340,7 +343,7 @@ class Editor extends Ext {
 	 *      LEFT JOIN dept ON users.dept_id = dept.id
 	 *    </code>
 	 */
-	public function leftJoin ( $table, $field1, $operator, $field2 )
+	public function leftJoin($table, $field1, $operator, $field2)
 	{
 		$this->_leftJoin[] = array(
 			"table"    => $table,
@@ -366,12 +369,12 @@ class Editor extends Ext {
 	 *    strings or multiple string parameters for the function.
 	 *  @return string[]|self Array of tables names, or self if used as a setter.
 	 */
-	public function table ( $_=null )
+	public function table($_ = null)
 	{
-		if ( $_ !== null && !is_array($_) ) {
+		if ($_ !== null && !is_array($_)) {
 			$_ = func_get_args();
 		}
-		return $this->_getSet( $this->_table, $_, true );
+		return $this->_getSet($this->_table, $_, true);
 	}
 
 
@@ -384,9 +387,9 @@ class Editor extends Ext {
 	 *  @return string|self Primary key value if no parameter is given, or
 	 *    self if used as a setter.
 	 */
-	public function pkey ( $_=null )
+	public function pkey($_ = null)
 	{
-		return $this->_getSet( $this->_pkey, $_ );
+		return $this->_getSet($this->_pkey, $_);
 	}
 
 
@@ -395,7 +398,7 @@ class Editor extends Ext {
 	 *  @param array $data Typically $_POST or $_GET as required by what is sent by Editor
 	 *  @return self
 	 */
-	public function process ( $data )
+	public function process($data)
 	{
 		$this->_processData = $data;
 		$this->_formData = isset($data['data']) ? $data['data'] : null;
@@ -405,54 +408,50 @@ class Editor extends Ext {
 		try {
 			$this->_prepJoin();
 
-			if ( !isset($data['action']) ) {
+			if (!isset($data['action'])) {
 				/* Get data */
-				$this->_out = array_merge( $this->_out, $this->_get( null, $data ) );
-			}
-			else if ( $data['action'] == "remove" ) {
+				$this->_out = array_merge($this->_out, $this->_get(null, $data));
+			} else if ($data['action'] == "remove") {
 				/* Remove rows */
-				$this->_remove( $data );
-			}
-			else {
+				$this->_remove($data);
+			} else {
 				/* Create or edit row */
-				$valid = $this->validate( $this->_out['fieldErrors'], $data );
+				$valid = $this->validate($this->_out['fieldErrors'], $data);
 
 				// Global validation - if you want global validation - do it here
 				// $this->_out['error'] = "";
 
-				if ( $valid ) {
-					if ( $data['action'] == "create" ) {
+				if ($valid) {
+					if ($data['action'] == "create") {
 						$this->_out['row'] = $this->_insert();
-					}
-					else {
-						$this->_out['row'] = $this->_update( $data['id'] );
+					} else {
+						$this->_out['row'] = $this->_update($data['id']);
 					}
 				}
 			}
 
 			$this->_db->commit();
-		}
-		catch (\Exception $e) {
+		} catch (Exception $e) {
 			// Error feedback
 			$this->_out['error'] = $e->getMessage();
 			$this->_db->rollback();
 		}
 
 		// Tidy up the reply
-		if ( count( $this->_out['fieldErrors'] ) === 0 ) {
-			unset( $this->_out['fieldErrors'] );
+		if (count($this->_out['fieldErrors']) === 0) {
+			unset($this->_out['fieldErrors']);
 		}
 
-		if ( isset($data['action']) && count( $this->_out['data'] ) === 0 ) {
-			unset( $this->_out['data'] );
+		if (isset($data['action']) && count($this->_out['data']) === 0) {
+			unset($this->_out['data']);
 		}
 
-		if ( $this->_out['error'] === '' ) {
-			unset( $this->_out['error'] );
+		if ($this->_out['error'] === '') {
+			unset($this->_out['error']);
 		}
 
 		// Not required in the Editor libraries
-		unset( $this->_out['id'] );
+		unset($this->_out['id']);
 
 		return $this;
 	}
@@ -474,18 +473,18 @@ class Editor extends Ext {
 	 *  @param array $data The format data to check
 	 *  @return boolean `true` if the data is valid, `false` if not.
 	 */
-	public function validate ( &$errors, $data )
+	public function validate(&$errors, $data)
 	{
 		// Validation is only performs on create and edit
-		if ( $data['action'] != "create" && $data['action'] != "edit" ) {
+		if ($data['action'] != "create" && $data['action'] != "edit") {
 			return true;
 		}
 
-		for ( $i=0 ; $i<count($this->_fields) ; $i++ ) {
+		for ($i = 0; $i < count($this->_fields); $i++) {
 			$field = $this->_fields[$i];
-			$validation = $field->validate( $data['data'], $this );
+			$validation = $field->validate($data['data'], $this);
 
-			if ( $validation !== true ) {
+			if ($validation !== true) {
 				$errors[] = array(
 					"name" => $field->name(),
 					"status" => $validation
@@ -493,7 +492,7 @@ class Editor extends Ext {
 			}
 		}
 
-		return count( $errors ) > 0 ? false : true;
+		return count($errors) > 0 ? false : true;
 	}
 
 
@@ -512,9 +511,9 @@ class Editor extends Ext {
 	 *  @param string          $op    Condition operator: <, >, = etc
 	 *  @return string[]|self Where condition array, or self if used as a setter.
 	 */
-	public function where ( $key=null, $value=null, $op='=' )
+	public function where($key = null, $value = null, $op = '=')
 	{
-		if ( $key === null ) {
+		if ($key === null) {
 			return $this->_where;
 		}
 
@@ -543,9 +542,9 @@ class Editor extends Ext {
 	 *  @param boolean $_ Include (`true`), or not (`false`)
 	 *  @return boolean Current value
 	 */
-	public function whereSet ( $_=null )
+	public function whereSet($_ = null)
 	{
-		return $this->_getSet( $this->_whereSet, $_ );
+		return $this->_getSet($this->_whereSet, $_);
 	}
 
 
@@ -564,37 +563,37 @@ class Editor extends Ext {
 	 *    server-side processing requests from DataTables).
 	 *  @private
 	 */
-	private function _get( $id=null, $http=null )
+	private function _get($id = null, $http = null)
 	{
 		$query = $this->_db
 			->query('select')
-			->table( $this->_table )
-			->get( $this->_pkey )
-			->get( $this->_fields('get') );
+			->table($this->_table)
+			->get($this->_pkey)
+			->get($this->_fields('get'));
 
-		$this->_get_where( $query );
-		$this->_left_join( $query );
-		$ssp = $this->_ssp_query( $query, $http );
+		$this->_get_where($query);
+		$this->_left_join($query);
+		$ssp = $this->_ssp_query($query, $http);
 
-		if ( $id !== null ) {
-			$query->where( $this->_pkey, $id );
+		if ($id !== null) {
+			$query->where($this->_pkey, $id);
 		}
 
 		$res = $query->exec();
-		if ( ! $res ) {
-			throw new \Exception('Error executing SQL for data get');
+		if (!$res) {
+			throw new Exception('Error executing SQL for data get');
 		}
 
 		$out = array();
-		while ( $row=$res->fetch() ) {
+		while ($row = $res->fetch()) {
 			$inner = array();
-			$inner['DT_RowId'] = $this->_idPrefix . $row[ $this->_pkey ];
+			$inner['DT_RowId'] = $this->_idPrefix . $row[$this->_pkey];
 
-			for ( $i=0 ; $i<count($this->_fields) ; $i++ ) {
+			for ($i = 0; $i < count($this->_fields); $i++) {
 				$field = $this->_fields[$i];
 
-				if ( $field->apply('get') ) {
-					$field->write( $inner, $row );
+				if ($field->apply('get')) {
+					$field->write($inner, $row);
 				}
 			}
 
@@ -602,13 +601,17 @@ class Editor extends Ext {
 		}
 
 		// Row based "joins"
-		for ( $i=0 ; $i<count($this->_join) ; $i++ ) {
-			$this->_join[$i]->data( $this->_db, $this->table(), $this->pkey(),
-				$this->idPrefix(), $out
+		for ($i = 0; $i < count($this->_join); $i++) {
+			$this->_join[$i]->data(
+				$this->_db,
+				$this->table(),
+				$this->pkey(),
+				$this->idPrefix(),
+				$out
 			);
 		}
 
-		return array_merge( array('data'=>$out), $ssp );
+		return array_merge(array('data' => $out), $ssp);
 	}
 
 
@@ -616,24 +619,24 @@ class Editor extends Ext {
 	 * Insert a new row in the database
 	 *  @private
 	 */
-	private function _insert( )
+	private function _insert()
 	{
 		// Insert the new row
-		$id = $this->_insert_or_update( null );
+		$id = $this->_insert_or_update(null);
 
 		// Was the primary key sent? Unusual, but it is possible
-		if ( isset( $this->_formData[ $this->_pkey ] ) ) {
-			$id = $this->_formData[ $this->_pkey ];
+		if (isset($this->_formData[$this->_pkey])) {
+			$id = $this->_formData[$this->_pkey];
 		}
 
 		// Join tables
-		for ( $i=0 ; $i<count($this->_join) ; $i++ ) {
-			$this->_join[$i]->create( $this->_db, $id, $this->_formData );
+		for ($i = 0; $i < count($this->_join); $i++) {
+			$this->_join[$i]->create($this->_db, $id, $this->_formData);
 		}
 
 		// Full data set for the created
-		$row = $this->_get( $id );
-		return count( $row['data'] ) > 0 ?
+		$row = $this->_get($id);
+		return count($row['data']) > 0 ?
 			$row['data'][0] :
 			null;
 	}
@@ -644,28 +647,28 @@ class Editor extends Ext {
 	 *  @param string $id The DOM ID for the row that is being edited.
 	 *  @private
 	 */
-	private function _update( $id )
+	private function _update($id)
 	{
-		$id = str_replace( $this->_idPrefix, '', $id );
+		$id = str_replace($this->_idPrefix, '', $id);
 
 		// Update or insert the rows for the parent table and the left joined
 		// tables
-		$this->_insert_or_update( $id );
+		$this->_insert_or_update($id);
 
 		// And the join tables
-		for ( $i=0 ; $i<count($this->_join) ; $i++ ) {
-			$this->_join[$i]->update( $this->_db, $id, $this->_formData );
+		for ($i = 0; $i < count($this->_join); $i++) {
+			$this->_join[$i]->update($this->_db, $id, $this->_formData);
 		}
 
 		// Was the primary key altered as part of the edit? Unusual, but it is
 		// possible
-		$getId = isset( $this->_formData[ $this->_pkey ] ) ?
-			$this->_formData[ $this->_pkey ] :
+		$getId = isset($this->_formData[$this->_pkey]) ?
+			$this->_formData[$this->_pkey] :
 			$id;
 
 		// Full data set for the modified row
-		$row = $this->_get( $getId );
-		return count( $row['data'] ) > 0 ?
+		$row = $this->_get($getId);
+		return count($row['data']) > 0 ?
 			$row['data'][0] :
 			null;
 	}
@@ -675,54 +678,53 @@ class Editor extends Ext {
 	 * Delete one or more rows from the database
 	 *  @private
 	 */
-	private function _remove( $data )
+	private function _remove($data)
 	{
-		$inIds = is_array( $data['id'] ) ?
+		$inIds = is_array($data['id']) ?
 			$data['id'] :
-			array( $data['id'] );
+			array($data['id']);
 
-		if ( count( $inIds ) === 0 ) {
-			throw new \Exception('No ids submitted for the delete');
+		if (count($inIds) === 0) {
+			throw new Exception('No ids submitted for the delete');
 		}
 
 		// Strip the ID prefix that the client-side sends back
-		for ( $i=0 ; $i<count($inIds) ; $i++ ) {
-			$ids[] = str_replace( $this->_idPrefix, "", $inIds[$i] );
+		for ($i = 0; $i < count($inIds); $i++) {
+			$ids[] = str_replace($this->_idPrefix, "", $inIds[$i]);
 		}
 
 		// Remove from the primary tables
-		for ( $i=0, $ien=count($this->_table) ; $i<$ien ; $i++ ) {
-			$this->_remove_table( $this->_table[$i], $ids );
+		for ($i = 0, $ien = count($this->_table); $i < $ien; $i++) {
+			$this->_remove_table($this->_table[$i], $ids);
 		}
 
 		// Remove from the left join tables
-		for ( $i=0, $ien=count($this->_leftJoin) ; $i<$ien ; $i++ ) {
+		for ($i = 0, $ien = count($this->_leftJoin); $i < $ien; $i++) {
 			$join = $this->_leftJoin[$i];
-			$table = $this->_alias( $join['table'], 'orig' );
+			$table = $this->_alias($join['table'], 'orig');
 
 			// which side of the join refers to the parent table?
-			if ( strpos( $join['field1'], $join['table'] ) === 0 ) {
+			if (strpos($join['field1'], $join['table']) === 0) {
 				$parentLink = $join['field2'];
 				$childLink = $join['field1'];
-			}
-			else {
+			} else {
 				$parentLink = $join['field1'];
 				$childLink = $join['field2'];
 			}
 
 			// Only delete on the primary key, since that is what the ids refer
 			// to - otherwise we'd be deleting random data!
-			if ( $parentLink === $this->_pkey ) {
-				$this->_remove_table( $this->_leftJoin[$i]['table'], $ids, $childLink );
+			if ($parentLink === $this->_pkey) {
+				$this->_remove_table($this->_leftJoin[$i]['table'], $ids, $childLink);
 			}
 		}
 
 		// And from the join tables
-		for ( $i=0 ; $i<count($this->_join) ; $i++ ) {
-			$this->_join[$i]->remove( $this->_db, $ids );
+		for ($i = 0; $i < count($this->_join); $i++) {
+			$this->_join[$i]->remove($this->_db, $ids);
 		}
 	}
-	
+
 
 	/**
 	 * Create an array of the DB fields to use for a get / set operation.
@@ -730,14 +732,14 @@ class Editor extends Ext {
 	 *  @return array List of fields
 	 *  @private
 	 */
-	private function _fields ( $direction )
+	private function _fields($direction)
 	{
 		$fields = array();
 
-		for ( $i=0 ; $i<count($this->_fields) ; $i++ ) {
+		for ($i = 0; $i < count($this->_fields); $i++) {
 			$field = $this->_fields[$i];
 
-			if ( $field->apply( $direction, $this->_formData ) ) {
+			if ($field->apply($direction, $this->_formData)) {
 				$fields[] = $field->dbField();
 			}
 		}
@@ -752,48 +754,48 @@ class Editor extends Ext {
 
 	/**
 	 * When server-side processing is being used, modify the query with // the
-     * required extra conditions
+	 * required extra conditions
 	 *
 	 *  @param Query $query Query instance to apply the SSP commands to
 	 *  @return array Server-side processing information array
 	 *  @private
 	 */
-	private function _ssp_query ( $query, $http )
+	private function _ssp_query($query, $http)
 	{
 		$ssp = array();
-		
-		if ( ! isset( $http['draw'] ) ) {
+
+		if (!isset($http['draw'])) {
 			return array();
 		}
 
 		// Add the server-side processing conditions
-		$this->_ssp_limit( $query, $http );
-		$this->_ssp_sort( $query, $http );
-		$this->_ssp_filter( $query, $http );
+		$this->_ssp_limit($query, $http);
+		$this->_ssp_sort($query, $http);
+		$this->_ssp_filter($query, $http);
 
 		// Get the number of rows in the result set
 		$ssp_set_count = $this->_db
 			->query('select')
-			->table( $this->_table )
-			->get( 'COUNT('.$this->_pkey.') as cnt' );
-		$this->_get_where( $ssp_set_count );
-		$this->_ssp_filter( $ssp_set_count, $http );
-		$this->_left_join( $ssp_set_count );
+			->table($this->_table)
+			->get('COUNT(' . $this->_pkey . ') as cnt');
+		$this->_get_where($ssp_set_count);
+		$this->_ssp_filter($ssp_set_count, $http);
+		$this->_left_join($ssp_set_count);
 		$ssp_set_count = $ssp_set_count->exec()->fetch();
 
 		// Get the number of rows in the full set
 		$ssp_full_count = $this->_db
 			->query('select')
-			->table( $this->_table )
-			->get( 'COUNT('.$this->_pkey.') as cnt' );
-		$this->_get_where( $ssp_full_count );
-		if ( count( $this->_where ) ) { // only needed if there is a where condition
-			$this->_left_join( $ssp_full_count );
+			->table($this->_table)
+			->get('COUNT(' . $this->_pkey . ') as cnt');
+		$this->_get_where($ssp_full_count);
+		if (count($this->_where)) { // only needed if there is a where condition
+			$this->_left_join($ssp_full_count);
 		}
 		$ssp_full_count = $ssp_full_count->exec()->fetch();
 
 		return array(
-			"draw" => intval( $http['draw'] ),
+			"draw" => intval($http['draw']),
 			"recordsTotal" => $ssp_full_count['cnt'],
 			"recordsFiltered" => $ssp_set_count['cnt']
 		);
@@ -808,13 +810,13 @@ class Editor extends Ext {
 	 *  @returns string DB field name
 	 *  @private // It is actually public for PHP 5.3 compatibility with a closure
 	 */
-	public function _ssp_field( $http, $index )
+	public function _ssp_field($http, $index)
 	{
 		$name = $http['columns'][$index]['data'];
-		$field = $this->_find_field( $name, 'name' );
+		$field = $this->_find_field($name, 'name');
 
-		if ( ! $field ) {
-			throw new \Exception('Unknown field: '.$name .' (index '.$index.')');
+		if (!$field) {
+			throw new Exception('Unknown field: ' . $name . ' (index ' . $index . ')');
 		}
 
 		return $field->dbField();
@@ -827,14 +829,14 @@ class Editor extends Ext {
 	 *  @param array $http HTTP variables (i.e. GET or POST)
 	 *  @private
 	 */
-	private function _ssp_sort ( $query, $http )
+	private function _ssp_sort($query, $http)
 	{
-		for ( $i=0 ; $i<count($http['order']) ; $i++ ) {
+		for ($i = 0; $i < count($http['order']); $i++) {
 			$order = $http['order'][$i];
 
 			$query->order(
-				$this->_ssp_field( $http, $order['column'] ) .' '.
-				($order['dir']==='asc' ? 'asc' : 'desc')
+				$this->_ssp_field($http, $order['column']) . ' ' .
+					($order['dir'] === 'asc' ? 'asc' : 'desc')
 			);
 		}
 	}
@@ -847,7 +849,7 @@ class Editor extends Ext {
 	 *  @param array $http HTTP variables (i.e. GET or POST)
 	 *  @private
 	 */
-	private function _ssp_filter ( $query, $http )
+	private function _ssp_filter($query, $http)
 	{
 		$that = $this;
 
@@ -856,25 +858,25 @@ class Editor extends Ext {
 
 		// Global search, add a ( ... or ... ) set of filters for each column
 		// in the table (not the fields, just the columns submitted)
-		if ( $http['search']['value'] ) {
-			$query->where( function ($q) use (&$that, &$fields, $http) {
-				for ( $i=0 ; $i<count($http['columns']) ; $i++ ) {
-					if ( $http['columns'][$i]['searchable'] == 'true' ) {
-						$field = $that->_ssp_field( $http, $i );
+		if ($http['search']['value']) {
+			$query->where(function ($q) use (&$that, &$fields, $http) {
+				for ($i = 0; $i < count($http['columns']); $i++) {
+					if ($http['columns'][$i]['searchable'] == 'true') {
+						$field = $that->_ssp_field($http, $i);
 
-						$q->or_where( $field, '%'.$http['search']['value'].'%', 'like' );
+						$q->or_where($field, '%' . $http['search']['value'] . '%', 'like');
 					}
 				}
-			} );
+			});
 		}
 
 		// Column filters
-		for ( $i=0, $ien=count($http['columns']) ; $i<$ien ; $i++ ) {
+		for ($i = 0, $ien = count($http['columns']); $i < $ien; $i++) {
 			$column = $http['columns'][$i];
 			$search = $column['search']['value'];
 
-			if ( $search && $column['searchable'] == 'true' ) {
-				$query->where( $this->_ssp_field( $http, $i ), '%'.$search.'%', 'like' );
+			if ($search && $column['searchable'] == 'true') {
+				$query->where($this->_ssp_field($http, $i), '%' . $search . '%', 'like');
 			}
 		}
 	}
@@ -886,12 +888,12 @@ class Editor extends Ext {
 	 *  @param array $http HTTP variables (i.e. GET or POST)
 	 *  @private
 	 */
-	private function _ssp_limit ( $query, $http )
+	private function _ssp_limit($query, $http)
 	{
-		if ( $http['start'] != -1 ) { // -1 is 'show all' in DataTables
+		if ($http['start'] != -1) { // -1 is 'show all' in DataTables
 			$query
-				->offset( $http['start'] )
-				->limit( $http['length'] );
+				->offset($http['start'])
+				->limit($http['length']);
 		}
 	}
 
@@ -906,13 +908,13 @@ class Editor extends Ext {
 	 *  @param Query $query Query instance to apply the joins to
 	 *  @private
 	 */
-	private function _left_join ( $query )
+	private function _left_join($query)
 	{
-		if ( count($this->_leftJoin) ) {
-			for ( $i=0, $ien=count($this->_leftJoin) ; $i<$ien ; $i++ ) {
+		if (count($this->_leftJoin)) {
+			for ($i = 0, $ien = count($this->_leftJoin); $i < $ien; $i++) {
 				$join = $this->_leftJoin[$i];
 
-				$query->join( $join['table'], $join['field1'].' '.$join['operator'].' '.$join['field2'], 'LEFT' );
+				$query->join($join['table'], $join['field1'] . ' ' . $join['operator'] . ' ' . $join['field2'], 'LEFT');
 			}
 		}
 	}
@@ -923,9 +925,9 @@ class Editor extends Ext {
 	 *  @param Query $query Query instance to apply the WHERE conditions ti
 	 *  @private
 	 */
-	private function _get_where ( $query )
+	private function _get_where($query)
 	{
-		for ( $i=0 ; $i<count($this->_where) ; $i++ ) {
+		for ($i = 0; $i < count($this->_where); $i++) {
 			$query->where(
 				$this->_where[$i]['key'],
 				$this->_where[$i]['value'],
@@ -942,15 +944,14 @@ class Editor extends Ext {
 	 *  @return Field Field instance
 	 *  @private
 	 */
-	private function _find_field ( $name, $type )
+	private function _find_field($name, $type)
 	{
-		for ( $i=0, $ien=count($this->_fields) ; $i<$ien ; $i++ ) {
-			$field = $this->_fields[ $i ];
+		for ($i = 0, $ien = count($this->_fields); $i < $ien; $i++) {
+			$field = $this->_fields[$i];
 
-			if ( $type === 'name' && $field->name() === $name ) {
+			if ($type === 'name' && $field->name() === $name) {
 				return $field;
-			}
-			else if ( $type === 'db' && $field->dbField() === $name ) {
+			} else if ($type === 'db' && $field->dbField() === $name) {
 				return $field;
 			}
 		}
@@ -966,13 +967,14 @@ class Editor extends Ext {
 	 *  @param string $name SQL field name to check.
 	 *  @private
 	 */
-	private function _table_part ( $name )
+	private function _table_part($name)
 	{
-		if ( strpos( $name, '.' ) === false ) {
-			throw new \Exception( 'Table part of the field '.$name.' was not found.'.
-				' In Editor instances that use a join, all fields must have the '.
-				' database table set explicitly. For example the field `'.$field->dbField().'`'.
-				' might be: `'.$this->_alias( $this->_table[0], 'orig' ).'.'.$field->dbField().'`'
+		if (strpos($name, '.') === false) {
+			throw new Exception(
+				'Table part of the field ' . $name . ' was not found.' .
+					' In Editor instances that use a join, all fields must have the ' .
+					' database table set explicitly. For example the field `' . $field->dbField() . '`' .
+					' might be: `' . $this->_alias($this->_table[0], 'orig') . '.' . $field->dbField() . '`'
 			);
 		}
 	}
@@ -988,10 +990,10 @@ class Editor extends Ext {
 	 *      performed.
 	 *  @private
 	 */
-	private function _insert_or_update ( $id )
+	private function _insert_or_update($id)
 	{
 		// Loop over all tables in _table, doing the insert or update as needed
-		for ( $i=0, $ien=count( $this->_table ) ; $i<$ien ; $i++ ) {
+		for ($i = 0, $ien = count($this->_table); $i < $ien; $i++) {
 			$res = $this->_insert_or_update_table(
 				$this->_table[$i],
 				$id === null ?
@@ -1001,47 +1003,45 @@ class Editor extends Ext {
 
 			// If we don't have an id yet, then the first insert will return
 			// the id we want
-			if ( $id === null ) {
+			if ($id === null) {
 				$id = $res->insertId();
 			}
 		}
 
 		// And for the left join tables as well
-		for ( $i=0, $ien=count( $this->_leftJoin ) ; $i<$ien ; $i++ ) {
+		for ($i = 0, $ien = count($this->_leftJoin); $i < $ien; $i++) {
 			$join = $this->_leftJoin[$i];
 
 			// which side of the join refers to the parent table?
-			$joinTable = $this->_alias( $join['table'], 'alias' );
-			$tablePart = $this->_part( $join['field1'] );
+			$joinTable = $this->_alias($join['table'], 'alias');
+			$tablePart = $this->_part($join['field1']);
 
-			if ( $this->_part( $join['field1'], 'db' ) ) {
-				$tablePart = $this->_part( $join['field1'], 'db' ).'.'.$tablePart;
+			if ($this->_part($join['field1'], 'db')) {
+				$tablePart = $this->_part($join['field1'], 'db') . '.' . $tablePart;
 			}
 
-			if ( $tablePart === $joinTable ) {
+			if ($tablePart === $joinTable) {
 				$parentLink = $join['field2'];
 				$childLink = $join['field1'];
-			}
-			else {
+			} else {
 				$parentLink = $join['field1'];
 				$childLink = $join['field2'];
 			}
 
-			if ( $parentLink === $this->_pkey ) {
-				$where = array( $childLink => $id );
-			}
-			else {
-				$field = $this->_find_field( $parentLink, 'db' );
-				if ( ! $field ) {
+			if ($parentLink === $this->_pkey) {
+				$where = array($childLink => $id);
+			} else {
+				$field = $this->_find_field($parentLink, 'db');
+				if (!$field) {
 					// The parent field wasn't included in the field list, so
 					// nothing can be done with it
 					continue;
 				}
 
-				$where = array( $childLink => $field->val('set', $this->_formData) );
+				$where = array($childLink => $field->val('set', $this->_formData));
 			}
 
-			$this->_insert_or_update_table( $join['table'], $where );
+			$this->_insert_or_update_table($join['table'], $where);
 		}
 
 		return $id;
@@ -1062,62 +1062,61 @@ class Editor extends Ext {
 	 *      performed.
 	 *  @private
 	 */
-	private function _insert_or_update_table ( $table, $where=null )
+	private function _insert_or_update_table($table, $where = null)
 	{
 		$set = array();
-		$tableName = $this->_alias( $table, 'orig' );
-		$tableAlias = $this->_alias( $table, 'alias' );
+		$tableName = $this->_alias($table, 'orig');
+		$tableAlias = $this->_alias($table, 'alias');
 
-		for ( $i=0 ; $i<count($this->_fields) ; $i++ ) {
+		for ($i = 0; $i < count($this->_fields); $i++) {
 			$field = $this->_fields[$i];
-			$tablePart = $this->_part( $field->dbField() );
+			$tablePart = $this->_part($field->dbField());
 
-			if ( $this->_part( $field->dbField(), 'db' ) ) {
-				$tablePart = $this->_part( $field->dbField(), 'db' ).'.'.$tablePart;
+			if ($this->_part($field->dbField(), 'db')) {
+				$tablePart = $this->_part($field->dbField(), 'db') . '.' . $tablePart;
 			}
 
 			// Does this field apply to this table (only check when a join is
 			// being used)
-			if ( count($this->_leftJoin) && $tablePart !== $tableAlias ) {
+			if (count($this->_leftJoin) && $tablePart !== $tableAlias) {
 				continue;
 			}
 
 			// Check if this field should be set, based on options and
 			// submitted data
-			if ( ! $field->apply( 'set', $this->_formData ) ) {
+			if (!$field->apply('set', $this->_formData)) {
 				continue;
 			}
 
 			// Some db's (specifically postgres) don't like having the table
 			// name prefixing the column name. TODO it might be nicer to have
 			// the db layer abstract this out?
-			$fieldPart = $this->_part( $field->dbField(), 'field' );
-			$set[ $fieldPart ] = $field->val('set', $this->_formData);
+			$fieldPart = $this->_part($field->dbField(), 'field');
+			$set[$fieldPart] = $field->val('set', $this->_formData);
 
 			// Add where fields if setting where values and required for this
 			// table
-			if ( $this->_whereSet ) {
-				for ( $j=0, $jen=count($this->_where) ; $j<$jen ; $j++ ) {
+			if ($this->_whereSet) {
+				for ($j = 0, $jen = count($this->_where); $j < $jen; $j++) {
 					$cond = $this->_where[$j];
 
-					if ( $tableAlias === $this->_table_part( $cond['key'] ) && ! isset( $set[ $cond['key'] ] ) ) {
-						$set[ $cond['key'] ] = $cond['value'];
+					if ($tableAlias === $this->_table_part($cond['key']) && !isset($set[$cond['key']])) {
+						$set[$cond['key']] = $cond['value'];
 					}
 				}
 			}
 		}
 
 		// If nothing to do, then do nothing!
-		if ( ! count( $set ) ) {
+		if (!count($set)) {
 			return null;
 		}
 
 		// Insert or update
-		if ( $where === null ) {
-			return $this->_db->insert( $this->_table, $set );
-		}
-		else {
-			return $this->_db->push( $table, $set, $where );
+		if ($where === null) {
+			return $this->_db->insert($this->_table, $set);
+		} else {
+			return $this->_db->push($table, $set, $where);
 		}
 	}
 
@@ -1132,16 +1131,16 @@ class Editor extends Ext {
 	 *    used.
 	 *  @private
 	 */
-	function _remove_table ( $table, $ids, $pkey=null )
+	function _remove_table($table, $ids, $pkey = null)
 	{
-		if ( $pkey === null ) {
+		if ($pkey === null) {
 			$pkey = $this->_pkey;
 		}
 
 		$stmt = $this->_db
-			->query( 'delete' )
-			->table( $table )
-			->or_where( $pkey, $ids )
+			->query('delete')
+			->table($table)
+			->or_where($pkey, $ids)
 			->exec();
 	}
 
@@ -1153,24 +1152,24 @@ class Editor extends Ext {
 	 *
 	 *  @private
 	 */
-	private function _prepJoin ()
+	private function _prepJoin()
 	{
-		if ( count( $this->_leftJoin ) === 0 ) {
+		if (count($this->_leftJoin) === 0) {
 			return;
 		}
 
 		// Check if the primary key has a table identifier - if not - add one
-		if ( strpos( $this->_pkey, '.' ) === false ) {
-			$this->_pkey = $this->_alias( $this->_table[0], 'alias' ).'.'.$this->_pkey;
+		if (strpos($this->_pkey, '.') === false) {
+			$this->_pkey = $this->_alias($this->_table[0], 'alias') . '.' . $this->_pkey;
 		}
 
 		// Check that all fields have a table selector, otherwise, we'd need to
 		// know the structure of the tables, to know which fields belong in
 		// which. This extra requirement on the fields removes that
-		for ( $i=0, $ien=count($this->_fields) ; $i<$ien ; $i++ ) {
+		for ($i = 0, $ien = count($this->_fields); $i < $ien; $i++) {
 			$field = $this->_fields[$i];
 
-			$this->_table_part( $field->dbField() ); // will throw an error if no table part
+			$this->_table_part($field->dbField()); // will throw an error if no table part
 		}
 	}
 
@@ -1182,13 +1181,13 @@ class Editor extends Ext {
 	 *  @param string $type Which part to get: `alias` (default) or `orig`.
 	 *  @private
 	 */
-	private function _alias ( $name, $type='alias' )
+	private function _alias($name, $type = 'alias')
 	{
-		if ( strpos( $name, ' as ' ) === false ) {
+		if (strpos($name, ' as ') === false) {
 			return $name;
 		}
 
-		$a = explode( ' as ', $name );
+		$a = explode(' as ', $name);
 		return $type === 'alias' ?
 			$a[1] :
 			$a[0];
@@ -1204,36 +1203,32 @@ class Editor extends Ext {
 	 *      `column`
 	 *  @private
 	 */
-	private function _part ( $name, $type='table' )
+	private function _part($name, $type = 'table')
 	{
 		$db = null;
 		$table = null;
 		$column = null;
 
-		if ( strpos( $name, '.' ) !== false ) {
-			$a = explode( '.', $name );
+		if (strpos($name, '.') !== false) {
+			$a = explode('.', $name);
 
-			if ( count($a) === 3 ) {
+			if (count($a) === 3) {
 				$db = $a[0];
 				$table = $a[1];
 				$column = $a[2];
-			}
-			else if ( count($a) === 2 ) {
+			} else if (count($a) === 2) {
 				$table = $a[0];
 				$column = $a[1];
 			}
-		}
-		else {
+		} else {
 			$column = $name;
 		}
 
-		if ( $type === 'db' ) {
+		if ($type === 'db') {
 			return $db;
-		}
-		else if ( $type === 'table' ) {
+		} else if ($type === 'table') {
 			return $table;
 		}
 		return $column;
 	}
 }
-

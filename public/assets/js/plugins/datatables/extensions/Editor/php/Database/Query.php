@@ -1,4 +1,5 @@
 <?php
+
 /**
  * DataTables PHP libraries.
  *
@@ -11,6 +12,7 @@
  */
 
 namespace DataTables\Database;
+
 if (!defined('DATATABLES')) exit();
 
 use
@@ -36,7 +38,8 @@ use
  * additional methods, but this is discouraged to ensure that the API is the
  * same for all database types.
  */
-class Query {
+class Query
+{
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Constructor
 	 */
@@ -50,11 +53,11 @@ class Query {
 	 *  @param string          $type  Query type - 'select', 'insert', 'update' or 'delete'
 	 *  @param string|string[] $table Tables to operate on - see {@link table}.
 	 */
-	public function __construct( $db, $type, $table=null )
+	public function __construct($db, $type, $table = null)
 	{
 		$this->_dbcon = $db;
 		$this->_type = $type;
-		$this->table( $table );
+		$this->table($table);
 	}
 
 
@@ -150,7 +153,7 @@ class Query {
 	 * Commit a transaction.
 	 *  @param * $dbh The Database handle (typically a PDO object, but not always).
 	 */
-	public static function commit ( $dbh )
+	public static function commit($dbh)
 	{
 		$dbh->commit();
 	}
@@ -163,7 +166,7 @@ class Query {
 	 *  @param string $db   Database name
 	 *  @return Query
 	 */
-	public static function connect ( $user, $pass='', $host='', $port='', $db='', $dsn='' )
+	public static function connect($user, $pass = '', $host = '', $port = '', $db = '', $dsn = '')
 	{
 		return false;
 	}
@@ -173,7 +176,7 @@ class Query {
 	 * Start a database transaction
 	 *  @param * $dbh The Database handle (typically a PDO object, but not always).
 	 */
-	public static function transaction ( $dbh )
+	public static function transaction($dbh)
 	{
 		$dbh->beginTransaction();
 	}
@@ -183,7 +186,7 @@ class Query {
 	 * Rollback the database state to the start of the transaction.
 	 *  @param * $dbh The Database handle (typically a PDO object, but not always).
 	 */
-	public static function rollback ( $dbh )
+	public static function rollback($dbh)
 	{
 		$dbh->rollBack();
 	}
@@ -195,15 +198,15 @@ class Query {
 	 *  @return Query
 	 *  @internal
 	 */
-	static function dsnPostfix ( $dsn )
+	static function dsnPostfix($dsn)
 	{
-		if ( ! $dsn ) {
+		if (!$dsn) {
 			return '';
 		}
 
 		// Add a DSN field separator if not given
-		if ( strpos( $dsn, ';' ) !== 0 ) {
-			return ';'.$dsn;
+		if (strpos($dsn, ';') !== 0) {
+			return ';' . $dsn;
 		}
 
 		return $dsn;
@@ -214,7 +217,7 @@ class Query {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Public methods
 	 */
-	
+
 
 	/**
 	 * Set a distinct flag for a `select` query. Note that this has no effect on
@@ -222,7 +225,7 @@ class Query {
 	 *  @param boolean $dis Optional
 	 *  @return Query
 	 */
-	public function distinct ( $dis )
+	public function distinct($dis)
 	{
 		$this->_distinct = $dis;
 		return $this;
@@ -233,27 +236,23 @@ class Query {
 	 *  @param string $sql SQL string to execute (only if _type is 'raw').
 	 *  @return Result
 	 */
-	public function exec ( $sql=null )
+	public function exec($sql = null)
 	{
-		$type = strtolower( $this->_type );
+		$type = strtolower($this->_type);
 
-		if ( $type === 'select' ) {
+		if ($type === 'select') {
 			return $this->_select();
-		}
-		else if ( $type === 'insert' ) {
+		} else if ($type === 'insert') {
 			return $this->_insert();
-		}
-		else if ( $type === 'update' ) {
+		} else if ($type === 'update') {
 			return $this->_update();
-		}
-		else if ( $type === 'delete' ) {
+		} else if ($type === 'delete') {
 			return $this->_delete();
+		} else if ($type === 'raw') {
+			return $this->_raw($sql);
 		}
-		else if ( $type === 'raw' ) {
-			return $this->_raw( $sql );
-		}
-		
-		throw new \Exception("Unknown database command or not supported: ".$type, 1);
+
+		throw new Exception("Unknown database command or not supported: " . $type, 1);
 	}
 
 
@@ -264,20 +263,20 @@ class Query {
 	 *    fields or any combination of those.
 	 *  @return self
 	 */
-	public function get ( $get )
+	public function get($get)
 	{
-		if ( $get === null ) {
+		if ($get === null) {
 			return $this;
 		}
 
 		$args = func_get_args();
 
-		for ( $i=0 ; $i<count($args) ; $i++ ) {
-			if ( !is_array($args[$i]) ) {
+		for ($i = 0; $i < count($args); $i++) {
+			if (!is_array($args[$i])) {
 				$get = explode(", ", $args[$i]);
 			}
 
-			$this->_field = array_merge( $this->_field, $get );
+			$this->_field = array_merge($this->_field, $get);
 		}
 
 		return $this;
@@ -291,29 +290,27 @@ class Query {
 	 *  @param string $type      JOIN type
 	 *  @return self
 	 */
-	public function join ( $table, $condition, $type='' )
+	public function join($table, $condition, $type = '')
 	{
 		if ($type !== '') {
 			$type = strtoupper(trim($type));
 
-			if ( ! in_array($type, array('LEFT', 'RIGHT', 'INNER', 'OUTER', 'LEFT OUTER', 'RIGHT OUTER'))) {
+			if (!in_array($type, array('LEFT', 'RIGHT', 'INNER', 'OUTER', 'LEFT OUTER', 'RIGHT OUTER'))) {
 				$type = '';
-			}
-			else {
+			} else {
 				$type .= ' ';
 			}
 		}
 
 		// Protect the identifiers
-		if (preg_match('/([\w\.]+)([\W\s]+)(.+)/', $condition, $match))
-		{
-			$match[1] = $this->_protect_identifiers( $match[1] );
-			$match[3] = $this->_protect_identifiers( $match[3] );
+		if (preg_match('/([\w\.]+)([\W\s]+)(.+)/', $condition, $match)) {
+			$match[1] = $this->_protect_identifiers($match[1]);
+			$match[3] = $this->_protect_identifiers($match[3]);
 
-			$condition = $match[1].$match[2].$match[3];
+			$condition = $match[1] . $match[2] . $match[3];
 		}
 
-		$this->_join[] = $type .'JOIN '. $this->_protect_identifiers($table) .' ON '. $condition .' ';
+		$this->_join[] = $type . 'JOIN ' . $this->_protect_identifiers($table) . ' ON ' . $condition . ' ';
 
 		return $this;
 	}
@@ -324,7 +321,7 @@ class Query {
 	 *  @param int $lim The number of records to limit the result to.
 	 *  @return self
 	 */
-	public function limit ( $lim )
+	public function limit($lim)
 	{
 		$this->_limit = $lim;
 
@@ -339,18 +336,18 @@ class Query {
 	 *    names or any combination of those.
 	 *  @return self
 	 */
-	public function table ( $table )
+	public function table($table)
 	{
-		if ( $table === null ) {
+		if ($table === null) {
 			return $this;
 		}
 
-		if ( !is_array($table) ) {
+		if (!is_array($table)) {
 			$table = explode(", ", $table);
 		}
 
-		for ( $i=0 ; $i<count($table) ; $i++ ) {
-			$this->_table[] = $this->_protect_identifiers( $table[$i] );
+		for ($i = 0; $i < count($table); $i++) {
+			$this->_table[] = $this->_protect_identifiers($table[$i]);
 		}
 
 		return $this;
@@ -362,7 +359,7 @@ class Query {
 	 *  @param int $off The number of records to offset the result by.
 	 *  @return self
 	 */
-	public function offset ( $off )
+	public function offset($off)
 	{
 		$this->_offset = $off;
 
@@ -377,30 +374,29 @@ class Query {
 	 *    separated names or any combination of those.
 	 *  @return self
 	 */
-	public function order ( $order )
+	public function order($order)
 	{
-		if ( $order === null ) {
+		if ($order === null) {
 			return $this;
 		}
 
-		if ( !is_array($order) ) {
+		if (!is_array($order)) {
 			$order = explode(", ", $order);
 		}
 
-		for ( $i=0 ; $i<count($order) ; $i++ ) {
+		for ($i = 0; $i < count($order); $i++) {
 			// Simplify the white-space
 			$order[$i] = preg_replace('/[\t ]+/', ' ', $order[$i]);
 
 			// Find the identifier so we don't escape that
-			if ( strpos($order[$i], ' ') !== false ) {
+			if (strpos($order[$i], ' ') !== false) {
 				$direction = strstr($order[$i], ' ');
-				$identifier = substr($order[$i], 0, - strlen($direction));
-			}
-			else {
+				$identifier = substr($order[$i], 0, -strlen($direction));
+			} else {
 				$direction = '';
 			}
 
-			$this->_order[] = $this->_protect_identifiers( $identifier ).' '.$direction;
+			$this->_order[] = $this->_protect_identifiers($identifier) . ' ' . $direction;
 		}
 
 		return $this;
@@ -418,14 +414,14 @@ class Query {
 	 *    name and this is the field's value.
 	 *  @return self
 	 */
-	public function set ( $set, $val=null )
+	public function set($set, $val = null)
 	{
-		if ( $set === null ) {
+		if ($set === null) {
 			return $this;
 		}
 
-		if ( !is_array($set) ) {
-			$set = array( $set => $val );
+		if (!is_array($set)) {
+			$set = array($set => $val);
 		}
 
 		foreach ($set as $key => $value) {
@@ -464,25 +460,23 @@ class Query {
 	 *         } );
 	 *     </code>
 	 */
-	public function where ( $key, $value=null, $op="=", $bind=true )
+	public function where($key, $value = null, $op = "=", $bind = true)
 	{
-		if ( $key === null ) {
+		if ($key === null) {
 			return $this;
-		}
-		else if ( is_callable($key) && is_object($key) ) { // is a closure
-			$this->_where_group( true, 'AND' );
-			$key( $this );
-			$this->_where_group( false, 'OR' );
-		}
-		else {
-			if ( !is_array($key) && is_array($value) ) {
-				for ( $i=0 ; $i<count($value) ; $i++ ) {
-					$this->where( $key, $value[$i], $op, $bind );
+		} else if (is_callable($key) && is_object($key)) { // is a closure
+			$this->_where_group(true, 'AND');
+			$key($this);
+			$this->_where_group(false, 'OR');
+		} else {
+			if (!is_array($key) && is_array($value)) {
+				for ($i = 0; $i < count($value); $i++) {
+					$this->where($key, $value[$i], $op, $bind);
 				}
 				return $this;
 			}
 
-			$this->_where( $key, $value, 'AND ', $op, $bind );
+			$this->_where($key, $value, 'AND ', $op, $bind);
 		}
 
 		return $this;
@@ -504,9 +498,9 @@ class Query {
 	 *  @param boolean                  $bind  Escape the value (true, default) or not (false).
 	 *  @return self
 	 */
-	public function and_where ( $key, $value=null, $op="=", $bind=true )
+	public function and_where($key, $value = null, $op = "=", $bind = true)
 	{
-		return $this->where( $key, $value, $op, $bind );
+		return $this->where($key, $value, $op, $bind);
 	}
 
 
@@ -524,25 +518,23 @@ class Query {
 	 *  @param boolean                  $bind  Escape the value (true, default) or not (false).
 	 *  @return self
 	 */
-	public function or_where ( $key, $value=null, $op="=", $bind=true )
+	public function or_where($key, $value = null, $op = "=", $bind = true)
 	{
-		if ( $key === null ) {
+		if ($key === null) {
 			return $this;
-		}
-		else if ( is_callable($key) ) {
-			$this->_where_group( true, 'OR' );
-			$key( $this );
-			$this->_where_group( false, 'OR' );
-		}
-		else {
-			if ( !is_array($key) && is_array($value) ) {
-				for ( $i=0 ; $i<count($value) ; $i++ ) {
-					$this->or_where( $key, $value[$i], $op, $bind );
+		} else if (is_callable($key)) {
+			$this->_where_group(true, 'OR');
+			$key($this);
+			$this->_where_group(false, 'OR');
+		} else {
+			if (!is_array($key) && is_array($value)) {
+				for ($i = 0; $i < count($value); $i++) {
+					$this->or_where($key, $value[$i], $op, $bind);
 				}
 				return $this;
 			}
 
-			$this->_where( $key, $value, 'OR ', $op, $bind );
+			$this->_where($key, $value, 'OR ', $op, $bind);
 		}
 
 		return $this;
@@ -559,9 +551,9 @@ class Query {
 	 *      preceding condition. Default `AND`.
 	 *  @return self
 	 */
-	public function where_group ( $inOut, $op='AND' )
+	public function where_group($inOut, $op = 'AND')
 	{
-		$this->_where_group( $inOut, $op );
+		$this->_where_group($inOut, $op);
 
 		return $this;
 	}
@@ -583,14 +575,14 @@ class Query {
 	 */
 	protected function _select()
 	{
-		$this->_prepare( 
-			'SELECT '.($this->_distinct ? 'DISTINCT ' : '')
-			.$this->_build_field( true )
-			.'FROM '.$this->_build_table()
-			.$this->_build_join()
-			.$this->_build_where()
-			.$this->_build_order()
-			.$this->_build_limit()
+		$this->_prepare(
+			'SELECT ' . ($this->_distinct ? 'DISTINCT ' : '')
+				. $this->_build_field(true)
+				. 'FROM ' . $this->_build_table()
+				. $this->_build_join()
+				. $this->_build_where()
+				. $this->_build_order()
+				. $this->_build_limit()
 		);
 
 		return $this->_exec();
@@ -604,14 +596,14 @@ class Query {
 	 */
 	protected function _insert()
 	{
-		$this->_prepare( 
+		$this->_prepare(
 			'INSERT INTO '
-				.$this->_build_table().' ('
-					.$this->_build_field()
-				.') '
-			.'VALUES ('
-				.$this->_build_value()
-			.')'
+				. $this->_build_table() . ' ('
+				. $this->_build_field()
+				. ') '
+				. 'VALUES ('
+				. $this->_build_value()
+				. ')'
 		);
 
 		return $this->_exec();
@@ -625,11 +617,11 @@ class Query {
 	 */
 	protected function _update()
 	{
-		$this->_prepare( 
+		$this->_prepare(
 			'UPDATE '
-			.$this->_build_table()
-			.'SET '.$this->_build_set()
-			.$this->_build_where()
+				. $this->_build_table()
+				. 'SET ' . $this->_build_set()
+				. $this->_build_where()
 		);
 
 		return $this->_exec();
@@ -643,10 +635,10 @@ class Query {
 	 */
 	protected function _delete()
 	{
-		$this->_prepare( 
+		$this->_prepare(
 			'DELETE FROM '
-			.$this->_build_table()
-			.$this->_build_where()
+				. $this->_build_table()
+				. $this->_build_where()
 		);
 
 		return $this->_exec();
@@ -657,9 +649,9 @@ class Query {
 	 *  @return Result
 	 *  @internal
 	 */
-	protected function _raw( $sql )
+	protected function _raw($sql)
 	{
-		$this->_prepare( $sql );
+		$this->_prepare($sql);
 
 		return $this->_exec();
 	}
@@ -676,7 +668,7 @@ class Query {
 	 */
 	protected function _build_table()
 	{
-		return ' '.implode(', ', $this->_table).' ';
+		return ' ' . implode(', ', $this->_table) . ' ';
 	}
 
 
@@ -685,24 +677,23 @@ class Query {
 	 *  @return string
 	 *  @internal
 	 */
-	protected function _build_field( $addAlias=false )
+	protected function _build_field($addAlias = false)
 	{
 		$a = array();
 
-		for ( $i=0 ; $i<count($this->_field) ; $i++ ) {
+		for ($i = 0; $i < count($this->_field); $i++) {
 			$field = $this->_field[$i];
 
 			// Keep the name when referring to a table
-			if ( $addAlias && strpos($field, ' as ') === false && $field !== '*' ) {
-				$a[] = $this->_protect_identifiers( $field ).' as '.
-					$this->_field_quote.$field.$this->_field_quote;
-			}
-			else {
-				$a[] = $this->_protect_identifiers( $field );
+			if ($addAlias && strpos($field, ' as ') === false && $field !== '*') {
+				$a[] = $this->_protect_identifiers($field) . ' as ' .
+					$this->_field_quote . $field . $this->_field_quote;
+			} else {
+				$a[] = $this->_protect_identifiers($field);
 			}
 		}
 
-		return ' '.implode(', ', $a).' ';
+		return ' ' . implode(', ', $a) . ' ';
 	}
 
 
@@ -713,8 +704,8 @@ class Query {
 	 */
 	protected function _build_order()
 	{
-		if ( count( $this->_order ) > 0 ) {
-			return ' ORDER BY '.implode(', ', $this->_order).' ';
+		if (count($this->_order) > 0) {
+			return ' ORDER BY ' . implode(', ', $this->_order) . ' ';
 		}
 		return '';
 	}
@@ -729,11 +720,11 @@ class Query {
 	{
 		$a = array();
 
-		for ( $i=0, $ien=count($this->_field) ; $i<$ien ; $i++ ) {
-			$a[] = ' :'.$this->_safe_bind( $this->_field[$i] );
+		for ($i = 0, $ien = count($this->_field); $i < $ien; $i++) {
+			$a[] = ' :' . $this->_safe_bind($this->_field[$i]);
 		}
 
-		return ' '.implode(', ', $a).' ';
+		return ' ' . implode(', ', $a) . ' ';
 	}
 
 
@@ -757,11 +748,11 @@ class Query {
 	{
 		$a = array();
 
-		for ( $i=0 ; $i<count($this->_field) ; $i++ ) {
-			$a[] = $this->_protect_identifiers( $this->_field[$i] ) .' = :'. $this->_safe_bind( $this->_field[$i] );
+		for ($i = 0; $i < count($this->_field); $i++) {
+			$a[] = $this->_protect_identifiers($this->_field[$i]) . ' = :' . $this->_safe_bind($this->_field[$i]);
 		}
 
-		return ' '.implode(', ', $a).' ';
+		return ' ' . implode(', ', $a) . ' ';
 	}
 
 
@@ -772,31 +763,27 @@ class Query {
 	 */
 	protected function _build_where()
 	{
-		if ( count($this->_where) === 0 ) {
+		if (count($this->_where) === 0) {
 			return "";
 		}
 
 		$where = "WHERE ";
 
-		for ( $i=0 ; $i<count($this->_where) ; $i++ ) {
-			if ( $i === 0 ) {
+		for ($i = 0; $i < count($this->_where); $i++) {
+			if ($i === 0) {
 				// Nothing (simplifies the logic!)
-			}
-			else if ( $this->_where[$i]['group'] === ')' ) {
+			} else if ($this->_where[$i]['group'] === ')') {
 				// Nothing
-			}
-			else if ( $this->_where[$i-1]['group'] === '(' ) {
+			} else if ($this->_where[$i - 1]['group'] === '(') {
 				// Nothing
-			}
-			else {
+			} else {
 				$where .= $this->_where[$i]['operator'];
 			}
 
-			if ( $this->_where[$i]['group'] !== null ) {
+			if ($this->_where[$i]['group'] !== null) {
 				$where .= $this->_where[$i]['group'];
-			}
-			else {
-				$where .= $this->_where[$i]['query'] .' ';
+			} else {
+				$where .= $this->_where[$i]['query'] . ' ';
 			}
 		}
 
@@ -814,13 +801,13 @@ class Query {
 	protected function _build_limit()
 	{
 		$out = '';
-		
-		if ( $this->_limit ) {
-			$out .= ' LIMIT '.$this->_limit;
+
+		if ($this->_limit) {
+			$out .= ' LIMIT ' . $this->_limit;
 		}
 
-		if ( $this->_offset ) {
-			$out .= ' OFFSET '.$this->_offset;
+		if ($this->_offset) {
+			$out .= ' OFFSET ' . $this->_offset;
 		}
 
 		return $out;
@@ -831,38 +818,36 @@ class Query {
 	 * Add an individual where condition to the query.
 	 *  @internal
 	 */
-	protected function _where ( $where, $value=null, $type='AND ', $op="=", $bind=true )
+	protected function _where($where, $value = null, $type = 'AND ', $op = "=", $bind = true)
 	{
 		$idl = $this->_identifier_limiter;
 
-		if ( $where === null ) {
+		if ($where === null) {
 			return;
-		}
-		else if ( !is_array($where) ) {
-			$where = array( $where => $value );
+		} else if (!is_array($where)) {
+			$where = array($where => $value);
 		}
 
 		foreach ($where as $key => $value) {
-			$i = count( $this->_where );
+			$i = count($this->_where);
 
-			if ( $bind ) {
+			if ($bind) {
 				$this->_where[] = array(
 					'operator' => $type,
 					'group'    => null,
 					'field'    => $this->_protect_identifiers($key),
 					'value'    => $value,
-					'binder'   => ':where_'. $this->_safe_bind( $i ),
-					'query'    => $this->_protect_identifiers($key) .' '.$op.' :where_'. $this->_safe_bind( $i )
+					'binder'   => ':where_' . $this->_safe_bind($i),
+					'query'    => $this->_protect_identifiers($key) . ' ' . $op . ' :where_' . $this->_safe_bind($i)
 				);
-			}
-			else {
+			} else {
 				$this->_where[] = array(
 					'operator' => $type,
 					'group'    => null,
 					'field'    => null,
 					'value'    => null,
 					'binder'   => null,
-					'query'    => $this->_protect_identifiers($key) .' '. $op .' '. $this->_protect_identifiers($value)
+					'query'    => $this->_protect_identifiers($key) . ' ' . $op . ' ' . $this->_protect_identifiers($value)
 				);
 			}
 		}
@@ -874,7 +859,7 @@ class Query {
 	 *  @return string
 	 *  @internal
 	 */
-	protected function _where_group ( $inOut, $op )
+	protected function _where_group($inOut, $op)
 	{
 		$this->_where[] = array(
 			"group"    => $inOut ? '(' : ')',
@@ -889,19 +874,18 @@ class Query {
 	 *  @return string
 	 *  @internal
 	 */
-	protected function _protect_identifiers( $identifier )
+	protected function _protect_identifiers($identifier)
 	{
 		$idl = $this->_identifier_limiter;
 
 		// No escaping character
-		if ( $idl === '' ) {
+		if ($idl === '') {
 			return $identifier;
 		}
 
 		// Dealing with a function? Just return immediately
 		// This is good enough for most cases, but not all (todo)
-		if (strpos($identifier, '(') !== FALSE || strpos($identifier, '*') !== FALSE)
-		{
+		if (strpos($identifier, '(') !== FALSE || strpos($identifier, '*') !== FALSE) {
 			return $identifier;
 		}
 
@@ -909,16 +893,15 @@ class Query {
 		$identifier = preg_replace('/[\t ]+/', ' ', $identifier);
 
 		// Find if our identifier has an alias, so we don't escape that
-		if ( strpos($identifier, ' as ') !== false ) {
+		if (strpos($identifier, ' as ') !== false) {
 			$alias = strstr($identifier, ' as ');
-			$identifier = substr($identifier, 0, - strlen($alias));
-		}
-		else {
+			$identifier = substr($identifier, 0, -strlen($alias));
+		} else {
 			$alias = '';
 		}
 
 		$a = explode('.', $identifier);
-		return $idl . implode($idl.'.'.$idl, $a) . $idl . $alias;
+		return $idl . implode($idl . '.' . $idl, $a) . $idl . $alias;
 	}
 
 
@@ -929,7 +912,7 @@ class Query {
 	 *  @return string
 	 *  @internal
 	 */
-	protected function _safe_bind ( $name )
+	protected function _safe_bind($name)
 	{
 		$name = str_replace('.', '_1_', $name);
 		$name = str_replace('-', '_2_', $name);
@@ -937,5 +920,3 @@ class Query {
 		return $name;
 	}
 };
-
-

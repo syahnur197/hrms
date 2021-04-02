@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Employee;
 use App\Models\Team;
-use App\Models\Role;
 use App\Models\User;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
-use App\Http\Requests;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class TeamController extends Controller
 {
@@ -44,7 +42,7 @@ class TeamController extends Controller
             $addTeam->save();
         }
 
-        \Session::flash('flash_message', 'Team successfully added!');
+        Session::flash('flash_message', 'Team successfully added!');
         return redirect()->back();
     }
 
@@ -87,11 +85,6 @@ class TeamController extends Controller
 
         if ($edit) {
             $oldMembers = Team::where('team_id', $team_id)->get(['member_id']);
-            /*$oldLeader = Team::where('team_id', $team_id)->get('leader_id');
-            if($oldLeader->leader_id == $leader_id)
-            {
-                //true condition
-            }*/
 
             foreach ($oldMembers as $oldMember) {
                 $oldmembers[] = $oldMember->member_id;
@@ -112,12 +105,12 @@ class TeamController extends Controller
                     $team->member_id = $add;
                     $team->save();
                 }
-                \Session::flash('flash_message', 'Team member successfully added!');
+                Session::flash('flash_message', 'Team member successfully added!');
             } elseif ($oldSize > $newSize) {
                 //delete the remainder
                 $idsToDelete = array_diff($oldmembers, $members);
-                \DB::table('teams')->where('team_id', $team_id)->whereIn('member_id', $idsToDelete)->delete();
-                \Session::flash('flash_message', 'Team member successfully deleted !');
+                DB::table('teams')->where('team_id', $team_id)->whereIn('member_id', $idsToDelete)->delete();
+                Session::flash('flash_message', 'Team member successfully deleted !');
             } else {
                 $team = Team::where('team_id', $team_id)->first();
                 $team->name = $name;
@@ -126,7 +119,7 @@ class TeamController extends Controller
                 $team->save();
             }
         } else {
-            \Session::flash('flash_message', 'Team not found!');
+            Session::flash('flash_message', 'Team not found!');
         }
 
         return redirect('team-listing');
@@ -137,7 +130,7 @@ class TeamController extends Controller
         $team = Team::where('member_id', $id);
         $team->delete();
 
-        \Session::flash('flash_message', 'Team member successfully removed!');
+        Session::flash('flash_message', 'Team member successfully removed!');
         return redirect('team-listing');
     }
 

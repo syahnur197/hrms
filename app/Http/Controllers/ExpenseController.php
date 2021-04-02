@@ -6,7 +6,7 @@ use App\Models\Expense;
 use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Session;
 
 class ExpenseController extends Controller
 {
@@ -27,7 +27,7 @@ class ExpenseController extends Controller
         $expense->amount = $request->amount;
         $expense->save();
 
-        \Session::flash('flash_message', 'Expense successfully added!');
+        Session::flash('flash_message', 'Expense successfully added!');
         return redirect()->back();
     }
 
@@ -57,7 +57,7 @@ class ExpenseController extends Controller
         $expense->save();
 
 
-        \Session::flash('flash_message', 'Expense successfully updated!');
+        Session::flash('flash_message', 'Expense successfully updated!');
         return redirect('expense-list');
     }
 
@@ -66,7 +66,7 @@ class ExpenseController extends Controller
         $expense = Expense::find($id);
         $expense->delete();
 
-        \Session::flash('flash_message', 'Expense successfully Deleted!');
+        Session::flash('flash_message', 'Expense successfully Deleted!');
         return redirect('expense-list');
     }
 }

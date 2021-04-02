@@ -12,7 +12,7 @@
 */
 
 $app = new Illuminate\Foundation\Application(
-    realpath(__DIR__.'/../')
+    realpath(__DIR__ . '/../')
 );
 
 /*
@@ -37,8 +37,8 @@ $app->singleton(
 );
 
 $app->singleton(
-    Illuminate\Contracts\Debug\ExceptionHandler::class,
-    App\Exceptions\Handler::class
+    Illuminate\Contracts\DebugExceptionHandler::class,
+    AppExceptions\Handler::class
 );
 
 /*

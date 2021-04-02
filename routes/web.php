@@ -13,8 +13,7 @@
 
 //Route::group(['middleware' => ['web']], function () {
 
-Route::group(['middleware' => ['guest']], function ()
-{
+Route::group(['middleware' => ['guest']], function () {
 
     Route::get('/', 'AuthController@showLogin');
 
@@ -25,12 +24,9 @@ Route::group(['middleware' => ['guest']], function ()
     Route::post('reset-password', 'AuthController@processPasswordReset');
 
     Route::get('register', 'AuthController@showRegister');
-
-
 });
 
-Route::group(['middleware' => ['auth']], function ()
-{
+Route::group(['middleware' => ['auth']], function () {
 
     Route::get('home', 'HomeController@index');
 
@@ -50,29 +46,29 @@ Route::group(['middleware' => ['auth']], function ()
 
     //Routes for add-employees
 
-    Route::get('add-employee', ['as' => 'add-employee', 'uses' => 'EmpController@addEmployee']);
+    Route::get('add-employee', ['as' => 'add-employee', 'uses' => 'EmployeeController@addEmployee']);
 
-    Route::post('add-employee', ['as' => 'add-employee', 'uses' => 'EmpController@processEmployee']);
+    Route::post('add-employee', ['as' => 'add-employee', 'uses' => 'EmployeeController@processEmployee']);
 
-    Route::get('employee-manager', ['as' => 'employee-manager', 'uses' => 'EmpController@showEmployee']);
+    Route::get('employee-manager', ['as' => 'employee-manager', 'uses' => 'EmployeeController@showEmployee']);
 
-    Route::post('employee-manager', 'EmpController@searchEmployee');
+    Route::post('employee-manager', 'EmployeeController@searchEmployee');
 
-    Route::get('upload-emp', ['as' => 'upload-emp', 'uses' => 'EmpController@importFile']);
+    Route::get('upload-emp', ['as' => 'upload-emp', 'uses' => 'EmployeeController@importFile']);
 
-    Route::post('upload-emp', ['as' => 'upload-emp', 'uses' => 'EmpController@uploadFile']);
+    Route::post('upload-emp', ['as' => 'upload-emp', 'uses' => 'EmployeeController@uploadFile']);
 
-    Route::get('edit-emp/{id}', ['as' => 'edit-emp', 'uses' => 'EmpController@showEdit']);
+    Route::get('edit-emp/{id}', ['as' => 'edit-emp', 'uses' => 'EmployeeController@showEdit']);
 
-    Route::post('edit-emp/{id}', ['as' => 'edit-emp', 'uses' => 'EmpController@doEdit']);
+    Route::post('edit-emp/{id}', ['as' => 'edit-emp', 'uses' => 'EmployeeController@doEdit']);
 
-    Route::get('delete-emp/{id}', ['as' => 'delete-emp', 'uses' => 'EmpController@doDelete']);
+    Route::get('delete-emp/{id}', ['as' => 'delete-emp', 'uses' => 'EmployeeController@doDelete']);
 
     //Routes for Bank Account details
 
-    Route::get('bank-account-details', ['uses' => 'EmpController@showDetails']);
+    Route::get('bank-account-details', ['uses' => 'EmployeeController@showDetails']);
 
-    Route::post('update-account-details', ['uses' => 'EmpController@updateAccountDetail']);
+    Route::post('update-account-details', ['uses' => 'EmployeeController@updateAccountDetail']);
 
     //Routes for Team.
 
@@ -212,7 +208,7 @@ Route::group(['middleware' => ['auth']], function ()
 
     //Routes for Event.
 
-    Route::get('create-event', ['as'=>'create-event','uses'=>'EventController@index']);
+    Route::get('create-event', ['as' => 'create-event', 'uses' => 'EventController@index']);
 
     Route::post('create-event', 'EventController@createEvent');
 
@@ -222,65 +218,65 @@ Route::group(['middleware' => ['auth']], function ()
 
     //Routes for Award.
 
-    Route::get('add-award', ['uses'=>'AwardController@addAward']);
+    Route::get('add-award', ['uses' => 'AwardController@addAward']);
 
-    Route::post('add-award', ['uses'=>'AwardController@processAward']);
+    Route::post('add-award', ['uses' => 'AwardController@processAward']);
 
-    Route::get('award-listing', ['uses'=>'AwardController@showAward']);
+    Route::get('award-listing', ['uses' => 'AwardController@showAward']);
 
-    Route::get('edit-award/{id}', ['uses'=>'AwardController@showAwardEdit']);
+    Route::get('edit-award/{id}', ['uses' => 'AwardController@showAwardEdit']);
 
-    Route::post('edit-award/{id}', ['uses'=>'AwardController@doAwardEdit']);
+    Route::post('edit-award/{id}', ['uses' => 'AwardController@doAwardEdit']);
 
-    Route::get('delete-award/{id}', ['uses'=>'AwardController@doAwardDelete']);
+    Route::get('delete-award/{id}', ['uses' => 'AwardController@doAwardDelete']);
 
-    Route::get('assign-award', ['uses'=>'AwardController@assignAward']);
+    Route::get('assign-award', ['uses' => 'AwardController@assignAward']);
 
-    Route::post('assign-award', ['uses'=>'AwardController@processAssign']);
+    Route::post('assign-award', ['uses' => 'AwardController@processAssign']);
 
-    Route::get('awardees-listing', ['uses'=>'AwardController@showAwardAssign']);
+    Route::get('awardees-listing', ['uses' => 'AwardController@showAwardAssign']);
 
-    Route::get('edit-award-assignment/{id}', ['uses'=>'AwardController@showAssignEdit']);
+    Route::get('edit-award-assignment/{id}', ['uses' => 'AwardController@showAssignEdit']);
 
-    Route::post('edit-award-assignment/{id}', ['uses'=>'AwardController@doAssignEdit']);
+    Route::post('edit-award-assignment/{id}', ['uses' => 'AwardController@doAssignEdit']);
 
-    Route::get('delete-award-assignment/{id}', ['uses'=>'AwardController@doAssignDelete']);
+    Route::get('delete-award-assignment/{id}', ['uses' => 'AwardController@doAssignDelete']);
 
     //Routes for Prmotion.
 
-    Route::get('promotion', ['uses'=>'EmpController@doPromotion']);
+    Route::get('promotion', ['uses' => 'EmployeeController@doPromotion']);
 
-    Route::post('promotion', ['uses'=>'EmpController@processPromotion']);
+    Route::post('promotion', ['uses' => 'EmployeeController@processPromotion']);
 
-    Route::get('show-promotion', ['uses'=>'EmpController@showPromotion']);
+    Route::get('show-promotion', ['uses' => 'EmployeeController@showPromotion']);
 
-    Route::post('get-promotion-data', ['uses' => 'EmpController@getPromotionData']);
+    Route::post('get-promotion-data', ['uses' => 'EmployeeController@getPromotionData']);
 
     //Routes for Training.
 
-    Route::get('add-training-program', ['uses'=>'TrainingController@addTrainingProgram']);
+    Route::get('add-training-program', ['uses' => 'TrainingController@addTrainingProgram']);
 
-    Route::post('add-training-program', ['uses'=>'TrainingController@processTrainingProgram']);
+    Route::post('add-training-program', ['uses' => 'TrainingController@processTrainingProgram']);
 
-    Route::get('show-training-program', ['uses'=>'TrainingController@showTrainingProgram']);
+    Route::get('show-training-program', ['uses' => 'TrainingController@showTrainingProgram']);
 
-    Route::get('edit-training-program/{id}', ['uses'=>'TrainingController@doEditTrainingProgram']);
+    Route::get('edit-training-program/{id}', ['uses' => 'TrainingController@doEditTrainingProgram']);
 
-    Route::post('edit-training-program/{id}', ['uses'=>'TrainingController@processEditTrainingProgram']);
+    Route::post('edit-training-program/{id}', ['uses' => 'TrainingController@processEditTrainingProgram']);
 
-    Route::get('delete-training-program/{id}',['uses'=>'TrainingController@deleteTrainingProgram']);
+    Route::get('delete-training-program/{id}', ['uses' => 'TrainingController@deleteTrainingProgram']);
 
-    Route::get('add-training-invite', ['uses'=>'TrainingController@addTrainingInvite']);
+    Route::get('add-training-invite', ['uses' => 'TrainingController@addTrainingInvite']);
 
-    Route::post('add-training-invite', ['uses'=>'TrainingController@processTrainingInvite']);
+    Route::post('add-training-invite', ['uses' => 'TrainingController@processTrainingInvite']);
 
-    Route::get('show-training-invite', ['uses'=>'TrainingController@showTrainingInvite']);
+    Route::get('show-training-invite', ['uses' => 'TrainingController@showTrainingInvite']);
 
-    Route::get('edit-training-invite/{id}', ['uses'=>'TrainingController@doEditTrainingInvite']);
+    Route::get('edit-training-invite/{id}', ['uses' => 'TrainingController@doEditTrainingInvite']);
 
-    Route::post('edit-training-invite/{id}', ['uses'=>'TrainingController@processEditTrainingInvite']);
+    Route::post('edit-training-invite/{id}', ['uses' => 'TrainingController@processEditTrainingInvite']);
 
-    Route::get('delete-training-invite/{id}',['uses'=>'TrainingController@deleteTrainingInvite']);
+    Route::get('delete-training-invite/{id}', ['uses' => 'TrainingController@deleteTrainingInvite']);
 
     Route::post('status-update', 'UpdateController@index');
 
@@ -312,7 +308,7 @@ Route::group(['middleware' => ['auth']], function ()
 
     Route::get('edit-project/{projectId}', 'ProjectController@showEdit')->name('edit-project');
 
-//    Route::post('edit-project/{projectId}', 'ProjectController@saveProjectEdit');
+    //    Route::post('edit-project/{projectId}', 'ProjectController@saveProjectEdit');
 
     Route::get('list-project', 'ProjectController@listProject')->name('list-project');
 

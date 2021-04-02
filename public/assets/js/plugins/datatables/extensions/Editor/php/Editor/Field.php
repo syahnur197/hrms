@@ -1,4 +1,5 @@
 <?php
+
 /**
  * DataTables PHP libraries.
  *
@@ -11,6 +12,7 @@
  */
 
 namespace DataTables\Editor;
+
 if (!defined('DATATABLES')) exit();
 
 use
@@ -61,7 +63,8 @@ use
  *      Field::inst( 'name.first as first_name' )
  *    </code>
  */
-class Field extends DataTables\Ext {
+class Field extends DataTables\Ext
+{
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Constructor
 	 */
@@ -73,17 +76,16 @@ class Field extends DataTables\Ext {
 	 *    HTTP submit from the client-side when editing. If not given then the
 	 *    $dbField name is used.
 	 */
-	function __construct( $dbField=null, $name=null )
+	function __construct($dbField = null, $name = null)
 	{
-		if ( $dbField !== null && $name === null ) {
+		if ($dbField !== null && $name === null) {
 			// Allow just a single parameter to be passed - each can be 
 			// overridden if needed later using the API.
-			$this->name( $dbField );
-			$this->dbField( $dbField );
-		}
-		else {
-			$this->name( $name );
-			$this->dbField( $dbField );
+			$this->name($dbField);
+			$this->dbField($dbField);
+		} else {
+			$this->name($name);
+			$this->dbField($dbField);
 		}
 	}
 
@@ -148,18 +150,17 @@ class Field extends DataTables\Ext {
 	 *  @return string|self The name of the db field if no parameter is given,
 	 *    or self if used as a setter.
 	 */
-	public function dbField ( $_=null )
+	public function dbField($_ = null)
 	{
-		if ( $_ === null ) {
+		if ($_ === null) {
 			return $this->_dbField;
 		}
 
-		if ( strpos( $_, ' as ' ) ) {
-			$a = explode( ' as ', $_ );
-			$this->_dbField = trim( $a[0] );
-			$this->_name = trim( $a[1] );
-		}
-		else {
+		if (strpos($_, ' as ')) {
+			$a = explode(' as ', $_);
+			$this->_dbField = trim($a[0]);
+			$this->_name = trim($a[1]);
+		} else {
 			$this->_dbField = $_;
 		}
 
@@ -176,9 +177,9 @@ class Field extends DataTables\Ext {
 	 *  @return boolean|self The get property if no parameter is given, or self
 	 *    if used as a setter.
 	 */
-	public function get ( $_=null )
+	public function get($_ = null)
 	{
-		return $this->_getSet( $this->_get, $_ );
+		return $this->_getSet($this->_get, $_);
 	}
 
 
@@ -202,12 +203,12 @@ class Field extends DataTables\Ext {
 	 *  @return function|string|self The get formatter if no parameter is given, or 
 	 *    self if used as a setter.
 	 */
-	public function getFormatter ( $_=null, $opts=null )
+	public function getFormatter($_ = null, $opts = null)
 	{
-		if ( $opts !== null ) {
+		if ($opts !== null) {
 			$this->_getFormatterOpts = $opts;
 		}
-		return $this->_getSet( $this->_getFormatter, $_ );
+		return $this->_getSet($this->_getFormatter, $_);
 	}
 
 
@@ -222,9 +223,9 @@ class Field extends DataTables\Ext {
 	 *  @return string|self The name property if no parameter is given, or self
 	 *    if used as a setter.
 	 */
-	public function name ( $_=null )
+	public function name($_ = null)
 	{
-		return $this->_getSet( $this->_name, $_ );
+		return $this->_getSet($this->_name, $_);
 	}
 
 
@@ -237,9 +238,9 @@ class Field extends DataTables\Ext {
 	 *  @return boolean|self The set property if no parameter is given, or self
 	 *    if used as a setter.
 	 */
-	public function set ( $_=null )
+	public function set($_ = null)
 	{
-		return $this->_getSet( $this->_set, $_ );
+		return $this->_getSet($this->_set, $_);
 	}
 
 
@@ -262,12 +263,12 @@ class Field extends DataTables\Ext {
 	 *  @return function|string|self The set formatter if no parameter is given, or 
 	 *    self if used as a setter.
 	 */
-	public function setFormatter ( $_=null, $opts=null )
+	public function setFormatter($_ = null, $opts = null)
 	{
-		if ( $opts !== null ) {
+		if ($opts !== null) {
 			$this->_setFormatterOpts = $opts;
 		}
-		return $this->_getSet( $this->_setFormatter, $_ );
+		return $this->_getSet($this->_setFormatter, $_);
 	}
 
 
@@ -288,12 +289,12 @@ class Field extends DataTables\Ext {
 	 *  @return function|string|self The validation method if no parameter is given, 
 	 *    or self if used as a setter.
 	 */
-	public function validator ( $_=null, $opts=null )
+	public function validator($_ = null, $opts = null)
 	{
-		if ( $opts !== null ) {
+		if ($opts !== null) {
 			$this->_validatorOpts = $opts;
 		}
-		return $this->_getSet( $this->_validator, $_ );
+		return $this->_getSet($this->_validator, $_);
 	}
 
 
@@ -313,16 +314,15 @@ class Field extends DataTables\Ext {
 	 *  @return boolean true if the field should be used in the get / set.
 	 *  @internal
 	 */
-	public function apply ( $direction, $data=null )
+	public function apply($direction, $data = null)
 	{
-		if ( $direction === 'get' ) {
+		if ($direction === 'get') {
 			// Get action - can we get this field
 			return $this->_get;
-		}
-		else {
+		} else {
 			// Note that validation must be done on input data before we get here
 			// Set action - can we set this field
-			if ( ! $this->_set ) {
+			if (!$this->_set) {
 				return false;
 			}
 
@@ -330,7 +330,7 @@ class Field extends DataTables\Ext {
 			// (validation would have failed if it was) and therefore we don't
 			// set it. Check for a set formatter as well, as it can format data
 			// from some other source
-			if ( ! $this->_setFormatter && ! $this->_inData( $this->name(), $data ) ) {
+			if (!$this->_setFormatter && !$this->_inData($this->name(), $data)) {
 				return false;
 			}
 
@@ -354,22 +354,22 @@ class Field extends DataTables\Ext {
 	 *  @return string Value for the field
 	 *  @internal
 	 */
-	public function val ( $direction, $data )
+	public function val($direction, $data)
 	{
-		if ( $direction === 'get' ) {
+		if ($direction === 'get') {
 			// Use data from the database, so the db name
-			$namedData = isset( $data[ $this->_dbField ] ) ?
-				$data[ $this->_dbField ] :
+			$namedData = isset($data[$this->_dbField]) ?
+				$data[$this->_dbField] :
 				null;
 
 			// Three cases for the getFormatter - closure, string or null
-			if ( $this->_getFormatter ) {
-				if ( is_string( $this->_getFormatter ) ) {
+			if ($this->_getFormatter) {
+				if (is_string($this->_getFormatter)) {
 					// Don't require the Editor namespace if DataTables validator is given as a string
-					if ( strpos($this->_getFormatter, "Format::") === 0 ) {
+					if (strpos($this->_getFormatter, "Format::") === 0) {
 						// Editor formatter
 						return call_user_func(
-							"\\DataTables\\Editor\\".$this->_getFormatter,
+							"\\DataTables\\Editor\\" . $this->_getFormatter,
 							$namedData,
 							$data,
 							$this->_getFormatterOpts
@@ -394,19 +394,18 @@ class Field extends DataTables\Ext {
 				);
 			}
 			return $namedData;
-		}
-		else {
+		} else {
 			// Use data for settings from the POST / GET data, so use the name
-			$namedData = $this->_readProp( $this->name(), $data );
+			$namedData = $this->_readProp($this->name(), $data);
 
 			// Three cases for the setFormatter - closure, string or null
-			if ( $this->_setFormatter ) {
-				if ( is_string( $this->_setFormatter ) ) {
+			if ($this->_setFormatter) {
+				if (is_string($this->_setFormatter)) {
 					// Don't require the Editor namespace if DataTables validator is given as a string
-					if ( strpos($this->_setFormatter, "Format::") === 0 ) {
+					if (strpos($this->_setFormatter, "Format::") === 0) {
 						// Editor formatter
 						return call_user_func(
-							"\\DataTables\\Editor\\".$this->_setFormatter,
+							"\\DataTables\\Editor\\" . $this->_setFormatter,
 							$namedData,
 							$data,
 							$this->_setFormatterOpts
@@ -434,9 +433,9 @@ class Field extends DataTables\Ext {
 		}
 	}
 
-	public function write( &$out, $data )
+	public function write(&$out, $data)
 	{
-		$this->_writeProp( $out, $this->name(), $this->val('get', $data) );
+		$this->_writeProp($out, $this->name(), $this->val('get', $data));
 	}
 
 
@@ -453,21 +452,21 @@ class Field extends DataTables\Ext {
 	 *  @return boolean Indicate if a field is valid or not.
 	 *  @internal
 	 */
-	public function validate ( $data, $editor )
+	public function validate($data, $editor)
 	{
 		// Three cases for the validator - closure, string or null
-		if ( ! $this->_validator ) {
+		if (!$this->_validator) {
 			return true;
 		}
 
-		$val = $this->_readProp( $this->name(), $data );
+		$val = $this->_readProp($this->name(), $data);
 
-		if ( is_string( $this->_validator ) ) {
+		if (is_string($this->_validator)) {
 			$processData = $editor->inData();
 			$instances = array(
 				'action' => $processData['action'],
 				'id'     => isset($processData['id']) ?
-					str_replace( $editor->idPrefix(), '', $processData['id'] ) :
+					str_replace($editor->idPrefix(), '', $processData['id']) :
 					null,
 				'field'  => $this,
 				'editor' => $editor,
@@ -475,13 +474,13 @@ class Field extends DataTables\Ext {
 			);
 
 			// Don't require the Editor namespace if DataTables validator is given as a string
-			if ( strpos($this->_validator, "Validate::") === 0 ) {
-				return call_user_func( "\\DataTables\\Editor\\".$this->_validator, $val, $data, $this->_validatorOpts, $instances );
+			if (strpos($this->_validator, "Validate::") === 0) {
+				return call_user_func("\\DataTables\\Editor\\" . $this->_validator, $val, $data, $this->_validatorOpts, $instances);
 			}
-			return call_user_func( $this->_validator, $val, $data, $this->_validatorOpts, $instances );
+			return call_user_func($this->_validator, $val, $data, $this->_validatorOpts, $instances);
 		}
 		$validator = $this->_validator;
-		return $validator( $val, $data, $this );
+		return $validator($val, $data, $this);
 	}
 
 
@@ -506,41 +505,40 @@ class Field extends DataTables\Ext {
 	 * @param  *       $value Value to write
 	 * @private
 	 */
-	private function _writeProp( &$out, $name, $value )
+	private function _writeProp(&$out, $name, $value)
 	{
-		if ( strpos($name, '.') === false ) {
-			$out[ $name ] = $value;
+		if (strpos($name, '.') === false) {
+			$out[$name] = $value;
 			return;
 		}
 
 		$orig = $name;
-		$names = explode( '.', $name );
+		$names = explode('.', $name);
 		$inner = &$out;
-		for ( $i=0 ; $i<count($names)-1 ; $i++ ) {
+		for ($i = 0; $i < count($names) - 1; $i++) {
 			$name = $names[$i];
 
-			if ( ! isset( $inner[ $name ] ) ) {
-				$inner[ $name ] = array();
-			}
-			else if ( ! is_array( $inner[ $name ] ) ) {
-				throw new \Exception(
-					'A property with the name `'.$name.'` already exists. This '.
-					'can occur if you have properties which share a prefix - '.
-					'for example `name` and `name.first`.'
+			if (!isset($inner[$name])) {
+				$inner[$name] = array();
+			} else if (!is_array($inner[$name])) {
+				throw new Exception(
+					'A property with the name `' . $name . '` already exists. This ' .
+						'can occur if you have properties which share a prefix - ' .
+						'for example `name` and `name.first`.'
 				);
 			}
 
-			$inner = &$inner[ $name ];
+			$inner = &$inner[$name];
 		}
 
-		if ( isset( $inner[ $names[count($names)-1] ] ) ) {
-			throw new \Exception(
-				'Duplicate field detected - a field with the name `'.$orig.'` '.
-				'already exists.'
+		if (isset($inner[$names[count($names) - 1]])) {
+			throw new Exception(
+				'Duplicate field detected - a field with the name `' . $orig . '` ' .
+					'already exists.'
 			);
 		}
 
-		$inner[ $names[count($names)-1] ] = $value;
+		$inner[$names[count($names) - 1]] = $value;
 	}
 
 
@@ -555,30 +553,30 @@ class Field extends DataTables\Ext {
 	 * @return *             The read value, or null if no value found.
 	 * @private
 	 */
-	private function _readProp ( $name, $data )
+	private function _readProp($name, $data)
 	{
-		if ( strpos($name, '.') === false ) {
-			return isset( $data[ $name ] ) ?
-				$data[ $name ] :
+		if (strpos($name, '.') === false) {
+			return isset($data[$name]) ?
+				$data[$name] :
 				null;
 		}
 
-		$names = explode( '.', $name );
+		$names = explode('.', $name);
 		$inner = $data;
 
-		for ( $i=0 ; $i<count($names)-1 ; $i++ ) {
-			if ( ! isset( $inner[ $names[$i] ] ) ) {
+		for ($i = 0; $i < count($names) - 1; $i++) {
+			if (!isset($inner[$names[$i]])) {
 				return null;
 			}
 
-			$inner = $inner[ $names[$i] ];
+			$inner = $inner[$names[$i]];
 		}
 
-		if ( isset( $names[count($names)-1] ) ) {
-			$idx = $names[count($names)-1];
+		if (isset($names[count($names) - 1])) {
+			$idx = $names[count($names) - 1];
 
-			return isset( $inner[ $idx ] ) ?
-				$inner[ $idx ] :
+			return isset($inner[$idx]) ?
+				$inner[$idx] :
 				null;
 		}
 		return null;
@@ -595,28 +593,27 @@ class Field extends DataTables\Ext {
 	 * @return boolean       `true` if present, `false` otherwise
 	 * @private
 	 */
-	private function _inData ( $name, $data )
+	private function _inData($name, $data)
 	{
-		if ( strpos($name, '.') === false ) {
-			return isset( $data[ $name ] ) ?
+		if (strpos($name, '.') === false) {
+			return isset($data[$name]) ?
 				true :
 				false;
 		}
 
-		$names = explode( '.', $name );
+		$names = explode('.', $name);
 		$inner = $data;
 
-		for ( $i=0 ; $i<count($names)-1 ; $i++ ) {
-			if ( ! isset( $inner[ $names[$i] ] ) ) {
+		for ($i = 0; $i < count($names) - 1; $i++) {
+			if (!isset($inner[$names[$i]])) {
 				return false;
 			}
 
-			$inner = $inner[ $names[$i] ];
+			$inner = $inner[$names[$i]];
 		}
 
-		return isset( $names[count($names)-1] ) ?
+		return isset($names[count($names) - 1]) ?
 			true :
 			false;
 	}
 }
-

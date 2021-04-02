@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\PostReply;
+use Exception;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
+use Illuminate\Support\Facades\Log;
 
 class UpdateController extends Controller
 {
@@ -16,18 +16,14 @@ class UpdateController extends Controller
         try {
             $post         = new Post();
             $post->status = $request->status;
-            $post->user_id = \Auth::user()->id;
+            $post->user_id = $request->user()->id;
             $post->save();
 
             $posts = Post::where('id', $post->id)->with('replies')->first();
             $view = view('hrms.updates.status', ['post' => $posts]);
             $html = $view->render();
-
-
-        }
-        catch(\Exception $e)
-        {
-            \Log::info($e->getMessage());
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
             return json_encode(['status' => false]);
         }
 
@@ -40,16 +36,14 @@ class UpdateController extends Controller
         try {
             $reply = new PostReply();
             $reply->message = $request->reply;
-            $reply->user_id = \Auth::user()->id;
+            $reply->user_id = $request->user()->id;
             $reply->post_id = $request->post_id;
             $reply->save();
 
             $view = view('hrms.updates.reply', ['reply' => $reply]);
             $html = $view->render();
-        }
-        catch(\Exception $e)
-        {
-            \Log::info($e->getMessage());
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
             return json_encode(['status' => false]);
         }
 

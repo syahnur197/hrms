@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Award;
 use App\Models\Awardee;
 use App\Models\Employee;
-use App\Models\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Session;
 
 class AwardController extends Controller
 {
@@ -25,7 +25,7 @@ class AwardController extends Controller
         $award->description = $request->description;
         $award->save();
 
-        \Session::flash('flash_message', 'Award successfully added!');
+        Session::flash('flash_message', 'Award successfully added!');
         return redirect()->back();
     }
 
@@ -55,7 +55,7 @@ class AwardController extends Controller
         }
         $edit->save();
 
-        \Session::flash('flash_message', 'Award successfully updated!');
+        Session::flash('flash_message', 'Award successfully updated!');
         return redirect('award-listing');
     }
 
@@ -64,7 +64,7 @@ class AwardController extends Controller
         $award = Award::find($id);
         $award->delete();
 
-        \Session::flash('flash_message', 'Award successfully deleted!');
+        Session::flash('flash_message', 'Award successfully deleted!');
         return redirect('award-listing');
     }
 
@@ -85,7 +85,7 @@ class AwardController extends Controller
         $awardee->reason = $request->reason;
         $awardee->save();
 
-        \Session::flash('flash_message', 'Award successfully assigned!');
+        Session::flash('flash_message', 'Award successfully assigned!');
         return redirect()->back();
     }
 
@@ -128,7 +128,7 @@ class AwardController extends Controller
         }
         $edit->save();
 
-        \Session::flash('flash_message', 'Award Assignment successfully updated!');
+        Session::flash('flash_message', 'Award Assignment successfully updated!');
         return redirect('awardees-listing');
     }
 
@@ -138,7 +138,7 @@ class AwardController extends Controller
         $assigns = Awardee::find($id);
         $assigns->delete();
 
-        \Session::flash('flash_message', 'Award Assignment successfully deleted!');
+        Session::flash('flash_message', 'Award Assignment successfully deleted!');
         return redirect('awardees-listing');
     }
 }

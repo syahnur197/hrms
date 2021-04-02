@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Employee;
 use App\Models\Role;
-use App\Models\User;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
+use Illuminate\Support\Facades\Session;
 
 class RoleController extends Controller
 {
@@ -19,12 +15,11 @@ class RoleController extends Controller
 
     public function processRole(Request $request)
     {
-        //Role::create(['name' => $request->name, 'description' => $request->description]);
         $role = new Role;
         $role->name = $request->name;
         $role->description = $request->description;
         $role->save();
-        \Session::flash('flash_message', 'Role successfully added!');
+        Session::flash('flash_message', 'Role successfully added!');
         return redirect()->back();
     }
 
@@ -53,7 +48,7 @@ class RoleController extends Controller
             $edit->description = $description;
         }
         $edit->save();
-        \Session::flash('flash_message', 'Role successfully updated!');
+        Session::flash('flash_message', 'Role successfully updated!');
         return redirect('role-list');
     }
 
@@ -61,7 +56,7 @@ class RoleController extends Controller
     {
         $role = Role::find($id);
         $role->delete();
-        \Session::flash('flash_message', 'Role successfully Deleted!');
+        Session::flash('flash_message', 'Role successfully Deleted!');
         return redirect('role-list');
     }
 }
