@@ -1,3 +1,7 @@
 /vendor
 .env
 .idea
+
+./node_modules
+
+.env
